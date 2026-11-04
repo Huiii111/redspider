@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { emptyFilterMessage, filterCounts, filterFaults, lineDiff, verdictCopy } from './grid.js'
+import { emptyFilterMessage, filterCounts, filterFaults, lineDiff, verdictCopy, missedLine } from './grid.js'
 
 const faults = [
   { id: 'all-caught', results: { a: 'DETECTED', b: 'DETECTED' } },
@@ -55,6 +55,16 @@ describe('emptyFilterMessage', () => {
   })
 })
 
+describe('missedLine', () => {
+  it('uses all problems as the total when the scanner finished them all', () => {
+    expect(missedLine({ silent: 4, error: 0 }, 10)).toEqual({ missed: 4, total: 'of 10' })
+  })
+
+  it('uses only the finished problems as the total when it could not finish some', () => {
+    expect(missedLine({ silent: 3, error: 2 }, 10)).toEqual({ missed: 3, total: 'of 8 it finished' })
+  })
+})
+
 describe('verdictCopy', () => {
   const benchmark = (missed, caughtByAnotherTool, { unfinished = 0, otherWarnings = 100 } = {}) => ({
     corpus: { faultCount: 24 },
@@ -67,7 +77,13 @@ describe('verdictCopy', () => {
 
   it('states how many hidden problems the scanner with the most warnings missed', () => {
     expect(verdictCopy(benchmark(9, 4)).headline).toBe(
-      'The scanner that reported the most warnings on a standard test project still missed 9 of the 24 problems we hid.',
+      'The scanner with the most warnings on a standard test project (300) still missed 9 of the 24 problems we hid.',
+    )
+  })
+
+  it('counts misses only against the problems that scanner finished', () => {
+    expect(verdictCopy(benchmark(9, 4, { unfinished: 4 })).headline).toBe(
+      'The scanner with the most warnings on a standard test project (300) still missed 9 of the 20 problems it finished.',
     )
   })
 
@@ -89,15 +105,19 @@ describe('verdictCopy', () => {
     )
   })
 
-  it('says why a miss matters to someone reading a clean scan', () => {
+  it('says scanners miss different things when another scanner caught a miss', () => {
     expect(verdictCopy(benchmark(9, 4)).reason).toContain(
-      'A clean scan only tells you something if you know what the scanner would have missed.',
+      'Scanners miss different things, so a clean scan only tells you something if you know what it would have missed.',
     )
+  })
+
+  it('does not say scanners differ when no other scanner caught a miss', () => {
+    expect(verdictCopy(benchmark(9, 0)).reason).not.toContain('Scanners miss different things')
   })
 
   it('says plainly when the test found no misses', () => {
     expect(verdictCopy(benchmark(0, 0)).headline).toBe(
-      'The scanner that reported the most warnings on a standard test project missed none of the 24 problems we hid.',
+      'The scanner with the most warnings on a standard test project (300) missed none of the 24 problems we hid.',
     )
   })
 

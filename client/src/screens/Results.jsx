@@ -9,6 +9,7 @@ import {
   FILTERS,
   filterCounts,
   filterFaults,
+  missedLine,
   mostWarningsScanner,
   verdictCopy,
 } from '../lib/grid.js'
@@ -20,7 +21,7 @@ const formatDate = (iso) =>
 function TryYourOwn() {
   return (
     <a className="button" href="#/try">
-      Try it on your own code
+      Try the scanners yourself
     </a>
   )
 }
@@ -36,7 +37,10 @@ function HowTheTestWorks({ faultCount, scannerCount }) {
         </li>
         <li>
           <strong>Run every scanner</strong>
-          <span>{scannerCount} security scanners checked the code with each problem and without it.</span>
+          <span>
+            {scannerCount} security scanners checked the code with each problem and without it. We also ran them on
+            TerraGoat, a public practice project full of deliberate flaws, to count their warnings.
+          </span>
         </li>
         <li>
           <strong>See who caught it</strong>
@@ -73,12 +77,17 @@ function RunDetails({ benchmark }) {
           <dt>Rule for the scanner in the headline</dt>
           <dd className="mono">{heuristic.rule}</dd>
         </div>
+        <div>
+          <dt>About the test project</dt>
+          <dd>TerraGoat comes from Bridgecrew, the maker of Checkov, so it may favour that scanner.</dd>
+        </div>
       </dl>
     </section>
   )
 }
 
 function ScannerHeading({ tool, faultCount, mostWarnings }) {
+  const { missed, total } = missedLine(tool, faultCount)
   return (
     <th scope="col">
       <span className="tool-name">{tool.name}</span>
@@ -86,7 +95,10 @@ function ScannerHeading({ tool, faultCount, mostWarnings }) {
         <span className="most-warnings">{mostWarnings.sharedTop ? 'Tied for most warnings' : 'Most warnings'}</span>
       )}
       <span className="tool-meta">
-        Missed <strong>{tool.silent}</strong> of {faultCount}
+        {tool.terragoatFindings} warnings on the test project
+      </span>
+      <span className="tool-meta">
+        Missed <strong>{missed}</strong> {total}
       </span>
       {tool.error > 0 && <span className="tool-meta">Couldn't finish {tool.error}</span>}
     </th>
@@ -163,7 +175,7 @@ function Benchmark({ benchmark }) {
           <p className="reason">{reason}</p>
           <div className="next-step">
             <TryYourOwn />
-            <span>Change some code and see which scanners notice.</span>
+            <span>Pick a hidden problem, or bring your own code.</span>
           </div>
         </section>
         <HowTheTestWorks faultCount={corpus.faultCount} scannerCount={tools.length} />

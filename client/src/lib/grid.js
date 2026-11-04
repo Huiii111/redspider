@@ -45,6 +45,12 @@ export function mostWarningsScanner({ tools, heuristic }) {
 }
 
 const WHY_IT_MATTERS = 'A clean scan only tells you something if you know what the scanner would have missed.'
+const SCANNERS_DIFFER = 'Scanners miss different things, so a clean scan only tells you something if you know what it would have missed.'
+
+export function missedLine(tool, faultCount) {
+  if (tool.error === 0) return { missed: tool.silent, total: `of ${faultCount}` }
+  return { missed: tool.silent, total: `of ${faultCount - tool.error} it finished` }
+}
 
 function caughtElsewhereSentence(missed, caughtElsewhere) {
   const those = missed === 1 ? 'that one' : 'those'
@@ -66,20 +72,24 @@ export function verdictCopy(benchmark) {
   const { faultCount } = benchmark.corpus
   const { missed, caughtByAnotherTool } = benchmark.heuristic
   const { scanner, sharedTop } = mostWarningsScanner(benchmark)
+  const warnings = scanner.terragoatFindings
   const subject = sharedTop
-    ? 'A scanner tied for the most warnings on a standard test project'
-    : 'The scanner that reported the most warnings on a standard test project'
+    ? `A scanner tied for the most warnings on a standard test project (${warnings})`
+    : `The scanner with the most warnings on a standard test project (${warnings})`
+  const outOf = scanner.error === 0
+    ? `${faultCount} problems we hid`
+    : `${faultCount - scanner.error} problems it finished`
 
   if (missed === 0) {
     return {
-      headline: `${subject} missed none of the ${faultCount} problems we hid.`,
+      headline: `${subject} missed none of the ${outOf}.`,
       reason: noMissesReason(scanner.error),
     }
   }
 
   return {
-    headline: `${subject} still missed ${missed} of the ${faultCount} problems we hid.`,
-    reason: `${caughtElsewhereSentence(missed, caughtByAnotherTool)} ${WHY_IT_MATTERS}`,
+    headline: `${subject} still missed ${missed} of the ${outOf}.`,
+    reason: `${caughtElsewhereSentence(missed, caughtByAnotherTool)} ${caughtByAnotherTool > 0 ? SCANNERS_DIFFER : WHY_IT_MATTERS}`,
   }
 }
 

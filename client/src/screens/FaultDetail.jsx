@@ -337,7 +337,7 @@ export function FaultDetail({ id }) {
       <footer className="fault-next">
         <BackLink />
         <a className="button" href="#/try">
-          Try it yourself
+          Try the scanners yourself
         </a>
       </footer>
     </article>
