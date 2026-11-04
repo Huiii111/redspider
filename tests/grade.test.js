@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gradePair, summarise, toScanStatus } from '../server/core/grade.js';
+import { gradePair, summarise, toScanStatus, LOOSE } from '../server/core/grade.js';
 
 const f = (ruleId, resource, line = 1) => ({ toolId: 't', ruleId, resource, severity: null, message: 'm', line });
 const ok = (...findings) => ({ ok: true, findings });
@@ -14,6 +14,13 @@ test('new (rule, resource) on the faulty twin is DETECTED', () => {
 
 test('same rule on a different resource counts as new', () => {
   assert.equal(gradePair(ok(f('A', 'x.one')), ok(f('A', 'x.one'), f('A', 'x.two'))).status, 'DETECTED');
+});
+
+test('loose matching: a new rule on an already-reported resource is SILENT', () => {
+  const clean = ok(f('A', 'x.y'));
+  const faulty = ok(f('A', 'x.y'), f('B', 'x.y'));
+  assert.equal(gradePair(clean, faulty).status, 'DETECTED');
+  assert.equal(gradePair(clean, faulty, { match: LOOSE }).status, 'SILENT');
 });
 
 test('shifted line numbers alone are SILENT', () => {
@@ -30,7 +37,7 @@ test('duplicate new findings are reported once', () => {
 
 test('a failed run on either side is ERROR, never SILENT', () => {
   assert.equal(gradePair({ ok: false, error: 'boom' }, ok()).status, 'ERROR');
-  const g = gradePair(ok(), { ok: false, error: 'timed out' }, ['before', 'after']);
+  const g = gradePair(ok(), { ok: false, error: 'timed out' }, { labels: ['before', 'after'] });
   assert.equal(g.status, 'ERROR');
   assert.equal(g.errorMessage, 'after: timed out');
 });

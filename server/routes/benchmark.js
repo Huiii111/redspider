@@ -12,7 +12,7 @@ export function benchmarkRouter({ config }) {
   r.get('/benchmark', asyncRoute(async (req, res) => {
     const run = await readStoredRun(config.resultsFile);
     if (!run) throw noRunError();
-    const { cases, ...summary } = run;
+    const { cases, raw, provenance, ...summary } = run;
     res.json(summary);
   }));
   return r;

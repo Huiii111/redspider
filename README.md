@@ -4,7 +4,9 @@ A benchmark that plants known faults in Terraform and shows which open-source sc
 
 The design, API contract and team split are in [architecture.md](architecture.md). This README covers how to install, run and work on the project.
 
-> **Status.** The backend (grader, API, benchmark script and Terraform generator) is built and tested. The real scanner adapters and the frontend are not built yet. Until the adapters exist, every result comes from **fake dev-only scanners** and means nothing about real tools.
+> **Status.** The backend (grader, API, benchmark, value check and Terraform generator) is built and tested. Adapters for Trivy, Checkov and KICS are in `server/adapters/`, merged from John's and Anton's branches and tested against real tool output, but no real benchmark has been run yet. The frontend is on Anton's branch. Fake mode (below) uses **dev-only stand-in scanners** whose results mean nothing about real tools.
+>
+> This backend combines the best parts of three branches. See [Where the code came from](#where-the-code-came-from).
 
 ## Contents
 
@@ -157,6 +159,7 @@ Every non-2xx response has the shape `{ "error": { "code": "...", "message": "..
 | 400 | `INVALID_INPUT` | Missing field, field not a string, or invalid JSON | Show the message |
 | 404 | `CASE_NOT_FOUND` | Unknown case id | Go back to the first screen |
 | 413 | `INPUT_TOO_LARGE` | A Terraform field is over 100 KB | Show the message |
+| 422 | `INVALID_TERRAFORM` | Before or after doesn't parse. Scanners exit 0 on broken files and report nothing, which would look like a miss, so these are rejected first | Show the message. It names the line |
 | 429 | `BUSY` | Two scans are already running | Ask the user to retry in a few seconds |
 | 503 | `NO_RUN` | No benchmark has been run | Show "no results yet". Never show placeholder numbers |
 | 500 | `INTERNAL` | Unexpected server failure | Show a generic error. Details are in the server log |
@@ -165,9 +168,21 @@ To see `NO_RUN`, stop the server, rename `results/benchmark.fake.json`, and star
 
 ## Guide for adapter work (John)
 
+### What's there now
+
+| File | What it is |
+|---|---|
+| `server/adapters/_run.js` | Shared runner, from John's `run.js`: `execFile` with no shell; on macOS `sandbox-exec` with no network, secret folders unreadable and writes limited to temp and caches; kill on timeout. Off macOS it refuses to run a scanner unless `ALLOW_UNSANDBOXED=1` |
+| `server/adapters/trivy.js` | John's parser (skips passed checks) with Anton's flags |
+| `server/adapters/checkov.js` | Anton's parse-error check, John's list handling |
+| `server/adapters/kics.js` | Anton's address parsing from `search_key` and parse-error check, John's separate output folder |
+| `server/adapters/disabled/terrascan.js` | Not loaded. Terrascan hangs without network. Move it up a level only after the team decides |
+
+Each adapter exports `parse(json)` so it can be tested against saved output in `tests/fixtures/tools/`. John's Docker sandbox, when ready, replaces `run()` in `_run.js` and nothing else.
+
 ### The contract
 
-Add one file per scanner in `server/adapters/`. The server loads every `.js`, `.mjs` and `.cjs` file there, except files starting with `_` (use those for shared helpers, such as `_exec.js`) and `index.*`.
+Add one file per scanner in `server/adapters/`. The server loads every `.js`, `.mjs` and `.cjs` file there, except files starting with `_` (use those for shared helpers) and `index.*`. Subfolders are not loaded.
 
 ```js
 // server/adapters/trivy.js
@@ -178,8 +193,9 @@ export default {
   async version() {
     // Return the installed version, e.g. '0.76.1'. Throw if the tool isn't installed.
   },
-  async scan(dir) {
+  async scan(dir, { timeoutMs } = {}) {
     // dir contains exactly one file: main.tf.
+    // timeoutMs is optional: kill the tool after this long. TerraGoat gets a longer limit.
     // Return an array of findings. Throw if the tool crashed or its output can't be read.
   },
 };
@@ -200,8 +216,9 @@ Each finding must have this shape. The server validates it with zod and marks th
 
 ### What matters most
 
-- **Normalise `resource` to the Terraform address**, such as `aws_s3_bucket.logs` or `aws_db_instance.db[0]`. The grader matches findings on `ruleId` plus `resource`. If a tool reports the address differently on the clean and faulty files, the grade will be wrong.
-- **Kill the child process when it times out.** The server has its own timeout (60 seconds by default) as a backstop, but it can't kill a process your adapter started.
+- **Normalise `resource` to the Terraform address**, such as `aws_s3_bucket.logs` or `aws_db_instance.db[0]`. The grader matches findings on `ruleId` plus `resource`. If a tool reports the address differently on the clean and faulty files, the grade will be wrong. For example, KICS's `resource_name` is often the bucket's *name attribute*, not its Terraform name, so the address must come from `search_key`.
+- **Treat a parse failure as an error, not as no findings.** Checkov reports `parsing_errors` and KICS reports `files_parsed < files_scanned`. Returning `[]` for these would grade as `SILENT`.
+- **Kill the child process when it times out.** The server has its own backstop 5 seconds later, but it can't kill a process your adapter started. `_run.js` already does this.
 - **Don't treat a non-zero exit code as failure.** Many scanners exit non-zero when they find something. Decide failure from whether the output is valid.
 - **Don't write into `dir`.** Send tool output files somewhere else. Each `dir` is deleted after the scan.
 - Follow the security rules in [architecture.md](architecture.md#security-rules-for-the-live-scan): use `execFile` with an argument array, never a shell, and turn off remote module downloads.
@@ -232,7 +249,7 @@ This produces `results/benchmark.json`, the result shown on stage.
    | KICS | `brew install kics` |
    | Terrascan | `brew install terrascan` |
 
-2. **Add the adapters** to `server/adapters/`, and check `npm run server` followed by `curl http://127.0.0.1:3001/api/health` shows every tool as available.
+2. **Check the tools are found.** Run `npm run server` and `curl http://127.0.0.1:3001/api/health`. Every tool should be available. If a tool isn't on `PATH`, set `TRIVY_BIN`, `CHECKOV_BIN` or `KICS_BIN`. Set `KICS_QUERIES_PATH` if KICS isn't from Homebrew. Off macOS, scans also need `ALLOW_UNSANDBOXED=1`, which runs scanners **without** the network sandbox; prefer running the real benchmark on a Mac.
 
 3. **Clone TerraGoat at a fixed commit**, so the heuristic can be reproduced. Record the commit in `docs/`.
 
@@ -251,13 +268,21 @@ This produces `results/benchmark.json`, the result shown on stage.
 
    The script stops if any tool is unavailable, if TerraGoat is missing, or if the TerraGoat scan fails. It prints one line per case and a summary table, then writes `results/benchmark.json`.
 
-6. **Serve it:**
+6. **Apply the pre-registered value check:**
+
+   ```sh
+   npm run value-check
+   ```
+
+   It prints the blind spot and decision changes under strict and loose matching, and the ablation, then gives the verdict defined in `docs/prereg.md`: `VALUE_PROVEN`, `VALUE_UNPROVEN` or `VALUE_REFUTED`. When the run used `tests/heldout/`, it writes `docs/evidence/value/report.json`, `docs/evidence/value-verdict.txt` and `docs/evidence/heldout.sha256`. Any other corpus is printed but never written as evidence.
+
+7. **Serve it:**
 
    ```sh
    npm run server
    ```
 
-If the summary reports any `ERROR` results, fix the adapter and run again before treating the result as evidence.
+If the summary reports any `ERROR` results, fix the adapter and run again before treating the result as evidence. Every file in the corpus must parse as Terraform, or the benchmark stops and names the file.
 
 ## Command reference
 
@@ -267,6 +292,8 @@ If the summary reports any `ERROR` results, fix the adapter and run again before
 | `npm test` | Run all tests. No scanners needed |
 | `npm run server` | Start the API with the real adapters in `server/adapters/` and `results/benchmark.json` |
 | `npm run benchmark -- --terragoat DIR` | Run the real benchmark on `tests/heldout/` |
+| `npm run value-check` | Apply the pre-registered value check to the stored run |
+| `npm run value-check:fake` | The same, on the fake run. Never written as evidence |
 | `npm run generate` | Write messy planted pairs to `tests/generated/` |
 | `npm run dev:fake` | Generate pairs, run the fake benchmark, and start the API in fake mode |
 | `npm run benchmark:fake` | Run the fake benchmark only |
@@ -301,7 +328,12 @@ All settings are environment variables, read only in [server/config.js](server/c
 | `CORPUS_DIR` | `tests/heldout` | Planted pairs the benchmark reads |
 | `TERRAGOAT_DIR` | none | TerraGoat folder for the heuristic |
 | `MAX_INPUT_BYTES` | `102400` | Size limit for each Terraform field in a live scan |
-| `TOOL_TIMEOUT_SECONDS` | `60` | Per-tool timeout for each scan. TerraGoat gets five times this |
+| `TOOL_TIMEOUT_SECONDS` | `30` | Per-tool timeout for each scan. TerraGoat gets five times this |
+| `TRIVY_BIN`, `CHECKOV_BIN`, `KICS_BIN` | `trivy`, `checkov`, `kics` | Scanner programs. A bare name is looked up on `PATH` |
+| `BREW_BIN` | `/opt/homebrew/bin` on macOS | Added to `PATH` for scanner processes |
+| `KICS_QUERIES_PATH` | Homebrew's KICS queries on macOS | KICS query library |
+| `ALLOW_UNSANDBOXED` | unset | Set to `1` to run scanners off macOS, where there is no network sandbox |
+| `EVIDENCE_DIR` | `docs/evidence` | Where `npm run value-check` writes evidence |
 
 How to set one for a single command:
 
@@ -326,6 +358,8 @@ Each case is a clean Terraform file and a twin with exactly one planted fault. E
 - **ERROR**: either scan failed. Never counted as silent.
 
 Line numbers are ignored, because planting a fault can shift them.
+
+Before any scan, each file is parsed with HashiCorp's HCL parser ([server/core/terraform.js](server/core/terraform.js)). Scanners exit 0 on broken Terraform and report nothing, so without this check a typo would grade as `SILENT`.
 
 The **heuristic** on the first screen answers: if you picked the tool with the most findings on TerraGoat, how many planted faults would it miss, and how many of those would another tool have caught? If two tools tie, the first by id is picked and the benchmark prints a warning.
 
@@ -360,6 +394,8 @@ server/
   routes/                  health, benchmark, cases, scan
   core/
     grade.js               Comparison logic, no I/O
+    valueCheck.js          Pre-registered value check, no I/O
+    terraform.js           Syntax check before scanning
     models.js              zod schemas for every boundary
     registry.js            Loads adapters
     runner.js              Runs one adapter, with timeout and validation
@@ -367,15 +403,17 @@ server/
     corpus.js              Reads planted pairs
     store.js               Reads and writes the stored run
   generator/               Messy Terraform generator
-  scripts/                 benchmark.js, generate.js
-  adapters/                Real scanner adapters (John)
+  scripts/                 benchmark.js, value-check.js, generate.js
+  adapters/                trivy, checkov, kics, and the shared _run.js
+    disabled/              terrascan (not loaded)
 client/                    React frontend (Anton), not added yet
 results/
   benchmark.json           Output of a real run
 tests/
   *.test.js                Tests
   fake-adapters/           Dev-only stand-in scanners
-  fixtures/                Sample inputs, and real tool output for adapter tests
+  fixtures/tools/          Real tool output from John and Anton, for adapter tests
+  fixtures/fake-terragoat/ Stand-in for TerraGoat in fake mode
   generated/               Output of npm run generate (not committed)
   heldout/                 Planted pairs for the value run. Nobody on the team opens this
 ```
@@ -388,6 +426,8 @@ npm test
 
 | File | Covers |
 |---|---|
+| `tests/adapters.test.js` | Parsers against real output from both branches, KICS addresses, parse failures, the sandboxed runner |
+| `tests/value-check.test.js` | Verdict thresholds, loose matching, ablation, syntax check |
 | `tests/grade.test.js` | Grading rules and the heuristic |
 | `tests/generator.test.js` | Generated files parse as HCL, declare their variables, and differ only by the fault |
 | `tests/api.test.js` | Every endpoint and error code, tool failures and timeouts, temp folder cleanup |
@@ -417,3 +457,21 @@ Tests use Node's built-in runner, so no extra framework is needed. Run one file 
 | `TerraGoat path not set` | Pass `--terragoat DIR` or set `TERRAGOAT_DIR` |
 | `generate: ... exists and wasn't made by this script` | The output folder has other files. Pick another `--out` |
 | `VAR=value npm run ...` fails on Windows | That syntax is for bash. Use the PowerShell form in [Configuration](#configuration), or Git Bash |
+| `no network sandbox on win32` (or linux) | The sandbox is macOS-only. Run real scans on a Mac, or set `ALLOW_UNSANDBOXED=1` knowing scanners then have network access |
+| `422 INVALID_TERRAFORM` from a live scan | The pasted Terraform doesn't parse. The message names the line |
+| `... is not valid Terraform` from the benchmark | A corpus file doesn't parse. Fix it, because scanners would silently report nothing on it |
+
+## Where the code came from
+
+Three branches built overlapping backends. This one keeps the strongest version of each part.
+
+| Part | Source | Why it was chosen |
+|---|---|---|
+| Grader, API, benchmark, generator, fake mode | Huiru | Deduplicates findings, stops on a missing tool or broken corpus, works with no scanners installed |
+| Sandboxed process runner | John | Denies network and secret folders, limits writes, refuses to run unsandboxed by accident |
+| Trivy parser, real output for all four tools | John | Skips passed checks, tolerates missing fields |
+| KICS addresses from `search_key` | Anton | John's version used `resource_name`, which gave `aws_s3_bucket.example-data-bucket` and `n/a.n/a` for the same bucket, breaking matching |
+| Checkov and KICS parse-failure detection | Anton | Otherwise broken input grades as `SILENT` |
+| Reject unparseable Terraform (`422`) | Anton's idea | Re-implemented with the HCL parser, so it works on any OS without `terraform` or `sandbox-exec` |
+| Value check with sensitivity and ablation | Anton | Implements `docs/prereg.md`. The verdict follows the registered thresholds only |
+| Held-out fields `resource`, `change`, `requirement.url` | Anton | Needed by the ablation |

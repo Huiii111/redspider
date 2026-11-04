@@ -21,12 +21,17 @@ export const Requirement = z.object({
   source: z.string().min(1),
   ref: z.string().min(1),
   text: z.string().min(1),
+  url: z.string().optional(),
 });
 
+// resource and change come from Anton's held-out schema. resource (the Terraform address the
+// fault is planted on) is what the value check's ablation needs.
 export const CaseMeta = z.object({
   id: z.string().regex(/^[A-Za-z0-9_-]+$/, 'id may only contain letters, digits, _ and -'),
   title: z.string().min(1),
   requirement: Requirement,
+  resource: z.string().min(1).optional(),
+  change: z.string().min(1).optional(),
 });
 
 // --- Grading ------------------------------------------------------------------
@@ -78,10 +83,29 @@ export const BenchmarkSummary = z.object({
   })),
 });
 
-// One file holds the summary served by GET /api/benchmark plus the per-case
-// detail served by GET /api/cases/:id.
+// What each tool produced on each twin, kept so the value check can regrade without rescanning.
+const Run = z.union([
+  z.object({ ok: z.literal(true), findings: Findings }),
+  z.object({ ok: z.literal(false), error: z.string() }),
+]);
+export const RawCase = z.object({
+  id: z.string(),
+  resource: z.string().nullable(),
+  runs: z.record(z.string(), z.object({ clean: Run, faulty: Run })),
+});
+
+// One file holds the summary served by GET /api/benchmark, the per-case detail served by
+// GET /api/cases/:id, and evidence (raw runs, provenance) that the API never serves.
 export const StoredRun = BenchmarkSummary.extend({
   cases: z.record(z.string(), CaseDetail),
+  raw: z.array(RawCase),
+  provenance: z.object({
+    corpusSha256: z.string(),
+    terragoatDir: z.string(),
+    node: z.string(),
+    platform: z.string(),
+    sandboxed: z.boolean(),
+  }),
 });
 
 // --- HTTP ---------------------------------------------------------------------

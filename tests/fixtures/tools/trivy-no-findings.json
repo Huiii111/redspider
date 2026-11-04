@@ -1,0 +1,21 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.1"
+  },
+  "ReportID": "01a1a814-90c8-79b8-9a5d-a2e19267caf8",
+  "CreatedAt": "2026-11-04T19:41:22.504638Z",
+  "ArtifactName": "/private/tmp/claude-501/-Users-hook-Documents-coding-python-hackathon-claude-commmunity-hacakthon/534506e7-85c0-4728-b7ae-6f713896fa59/scratchpad/probe2/empty/in",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": ".",
+      "Class": "config",
+      "Type": "terraform",
+      "MisconfSummary": {
+        "Successes": 51,
+        "Failures": 0
+      }
+    }
+  ]
+}

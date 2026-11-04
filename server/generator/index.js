@@ -154,6 +154,8 @@ export function generate({ seed = 1, count = ALL_FAULTS.length } = {}) {
       id: `gen-${seed}-${String(i + 1).padStart(3, '0')}-${fault.id}`,
       title: fault.title,
       requirement: fault.requirement,
+      resource: fault.resource,
+      change: fault.change,
       clean: cleanText,
       faulty: faultyText,
       generator: { seed, index: i, scenario: target.scenario, fault: fault.id, style },

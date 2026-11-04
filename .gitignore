@@ -2,3 +2,4 @@ node_modules/
 *.tmp
 tests/generated/
 results/benchmark.fake.json
+branches/

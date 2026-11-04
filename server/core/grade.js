@@ -4,9 +4,11 @@
 //   { ok: true, findings: Finding[] }  or  { ok: false, error: string }
 
 // Line numbers are deliberately not part of the key: planting a fault shifts them.
-export function findingKey(f) {
-  return `${f.ruleId.trim()}\u0000${f.resource.trim()}`;
-}
+// STRICT is the registered rule (docs/prereg.md). LOOSE is the sensitivity check: the same
+// resource with any rule counts as already reported.
+export const STRICT = (f) => `${f.ruleId.trim()}\u0000${f.resource.trim()}`;
+export const LOOSE = (f) => f.resource.trim();
+export const findingKey = STRICT;
 
 /**
  * Compare a tool's runs on the clean and faulty twin.
@@ -14,16 +16,16 @@ export function findingKey(f) {
  * SILENT:   both runs succeeded and nothing new appeared.
  * ERROR:    either run failed. Never counted as silent: we did not observe a miss.
  */
-export function gradePair(cleanRun, faultyRun, labels = ['clean', 'faulty']) {
+export function gradePair(cleanRun, faultyRun, { labels = ['clean', 'faulty'], match = STRICT } = {}) {
   const errors = [[cleanRun, labels[0]], [faultyRun, labels[1]]].filter(([r]) => !r.ok).map(([r, l]) => `${l}: ${r.error}`);
   if (errors.length) {
     return { status: 'ERROR', newFindings: [], cleanFindingCount: cleanRun.ok ? cleanRun.findings.length : 0, errorMessage: errors.join('; ') };
   }
-  const cleanKeys = new Set(cleanRun.findings.map(findingKey));
+  const cleanKeys = new Set(cleanRun.findings.map(match));
   const seen = new Set();
   const newFindings = [];
   for (const f of faultyRun.findings) {
-    const k = findingKey(f);
+    const k = match(f);
     if (cleanKeys.has(k) || seen.has(k)) continue;
     seen.add(k);
     newFindings.push(f);

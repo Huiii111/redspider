@@ -43,7 +43,7 @@ test('health lists every tool and whether it is available', async () => {
   const res = await fetch(`${base}/health`);
   assert.equal(res.status, 200);
   const { tools } = await res.json();
-  assert.deepEqual(tools.find((t) => t.id === 'sees'), { id: 'sees', name: 'Sees', available: true, version: '1.0' });
+  assert.deepEqual(tools.find((t) => t.id === 'sees'), { id: 'sees', name: 'Sees', license: 'MIT', available: true, version: '1.0' });
   const c = tools.find((t) => t.id === 'crash');
   assert.equal(c.available, false);
   assert.equal(c.version, null);
@@ -102,6 +102,11 @@ test('scan input errors use the shared error shape', async () => {
     assert.equal(json.error.code, code);
     assert.ok(json.error.message.length > 0);
   }
+  const broken = await post({ before: 'resource "a" "b" {\n  x = 1\n}', after: 'resource "a" "b" {\n  x = \n}' });
+  assert.equal(broken.status, 422);
+  const brokenJson = await broken.json();
+  assert.equal(brokenJson.error.code, 'INVALID_TERRAFORM');
+  assert.match(brokenJson.error.message, /after version isn't valid Terraform.*Line 2/);
   const bad = await post('{not json', true);
   assert.equal(bad.status, 400);
   assert.equal((await bad.json()).error.code, 'INVALID_INPUT');
@@ -112,6 +117,8 @@ test('stored run: benchmark omits case detail, cases serves it, unknown id is 40
   await writeStoredRun(cfg.resultsFile, {
     runId: 'r1', ranAt: new Date().toISOString(),
     corpus: { source: 'tests/heldout', planted: true, faultCount: 1 },
+    raw: [{ id: 'c1', resource: 'x.y', runs: { sees: { clean: { ok: true, findings: [] }, faulty: { ok: true, findings: [finding('sees', 'OPEN', 'x.y')] } } } }],
+    provenance: { corpusSha256: 'abc', terragoatDir: 't', node: 'v24', platform: 'win32', sandboxed: false },
     heuristic: { rule: 'Tool with the most findings on TerraGoat', toolId: 'sees', missed: 0, caughtByAnotherTool: 0 },
     tools: [{ id: 'sees', name: 'Sees', version: '1', license: 'MIT', terragoatFindings: 3, detected: 1, silent: 0, error: 0 }],
     faults: [{ id: 'c1', title: 'SSH open', requirement: { source: req.source, ref: req.ref }, results: { sees: 'DETECTED' } }],
@@ -120,6 +127,8 @@ test('stored run: benchmark omits case detail, cases serves it, unknown id is 40
   const bm = await (await fetch(`${base}/benchmark`)).json();
   assert.equal(bm.runId, 'r1');
   assert.equal(bm.cases, undefined);
+  assert.equal(bm.raw, undefined, 'raw runs are evidence, not API output');
+  assert.equal(bm.provenance, undefined);
   const c = await (await fetch(`${base}/cases/c1`)).json();
   assert.equal(c.requirement.text, 'Control the boundary.');
   assert.equal(c.results[0].newFindings.length, 1);

@@ -46,7 +46,7 @@ const cases = generate({ seed, count });
 for (const c of cases) {
   const dir = path.join(outDir, c.id);
   await fs.mkdir(dir);
-  const meta = { id: c.id, title: c.title, requirement: c.requirement, generator: c.generator };
+  const meta = { id: c.id, title: c.title, requirement: c.requirement, resource: c.resource, change: c.change, generator: c.generator };
   await fs.writeFile(path.join(dir, 'case.json'), `${JSON.stringify(meta, null, 2)}\n`);
   await fs.writeFile(path.join(dir, 'clean.tf'), c.clean);
   await fs.writeFile(path.join(dir, 'faulty.tf'), c.faulty);

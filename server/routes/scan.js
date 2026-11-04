@@ -7,6 +7,7 @@ import { ScanRequest } from '../core/models.js';
 import { gradePair, toScanStatus } from '../core/grade.js';
 import { runTool } from '../core/runner.js';
 import { withTerraformDir } from '../core/workspace.js';
+import { syntaxError } from '../core/terraform.js';
 import { asyncRoute } from './_async.js';
 
 const MAX_CONCURRENT_SCANS = 2; // Each scan starts 2 processes per tool; cap it so the laptop stays responsive on stage.
@@ -28,6 +29,13 @@ export function scanRouter({ config, getAdapters }) {
         throw new ApiError(413, 'INPUT_TOO_LARGE', `${name} is ${bytes} bytes; the limit is ${config.maxInputBytes}. Trim it to the resources you're testing.`);
       }
     }
+    // Scanners exit 0 on broken Terraform and report nothing, which would grade as SILENT.
+    for (const [name, text] of [['before', before], ['after', after]]) {
+      const problem = await syntaxError(text);
+      if (problem) {
+        throw new ApiError(422, 'INVALID_TERRAFORM', `The ${name} version isn't valid Terraform, so no tool could judge it fairly. ${problem}`);
+      }
+    }
     if (inFlight >= MAX_CONCURRENT_SCANS) {
       throw new ApiError(429, 'BUSY', 'Another scan is still running. Try again in a few seconds.');
     }
@@ -43,7 +51,7 @@ export function scanRouter({ config, getAdapters }) {
           withTerraformDir(before, (dir) => runTool(adapter, dir, timeoutMs)),
           withTerraformDir(after, (dir) => runTool(adapter, dir, timeoutMs)),
         ]);
-        const g = gradePair(beforeRun, afterRun, ['before', 'after']);
+        const g = gradePair(beforeRun, afterRun, { labels: ['before', 'after'] });
         return {
           toolId: adapter.id,
           status: toScanStatus(g.status),

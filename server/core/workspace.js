@@ -9,7 +9,7 @@ export const INPUT_FILENAME = 'main.tf';
 export async function withTerraformDir(terraformText, fn) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'sbs-'));
   try {
-    await fs.writeFile(path.join(dir, INPUT_FILENAME), terraformText, 'utf8');
+    await fs.writeFile(path.join(dir, INPUT_FILENAME), terraformText, { encoding: 'utf8', mode: 0o600 }); // Owner-only (from John's workdir.js).
     return await fn(dir);
   } finally {
     await fs.rm(dir, { recursive: true, force: true });

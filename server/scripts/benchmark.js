@@ -43,8 +43,9 @@ console.log(`Tools: ${probes.map((p) => `${p.id} ${p.version}`).join(', ')}`);
 
 // 2. Corpus.
 let cases;
+let corpusSha256;
 try {
-  cases = await readCorpus(corpusDir);
+  ({ cases, sha256: corpusSha256 } = await readCorpus(corpusDir)); // also syntax-checks every file
 } catch (err) {
   fail(err.message);
 }
@@ -58,6 +59,7 @@ if (tgFailed.length) fail(`TerraGoat scan failed for ${tgFailed.map(([id, r]) =>
 
 // 4. Every tool on every pair. Tools run in parallel within a case.
 const details = {};
+const raw = []; // every tool's findings on both twins, for npm run value-check
 for (const [n, c] of cases.entries()) {
   const results = await Promise.all(adapters.map(async (a) => {
     const [cleanRun, faultyRun] = await Promise.all([
@@ -65,8 +67,11 @@ for (const [n, c] of cases.entries()) {
       withTerraformDir(c.faulty, (dir) => runTool(a, dir, timeoutMs)),
     ]);
     const g = gradePair(cleanRun, faultyRun);
-    return { toolId: a.id, ...g };
+    const strip = (r) => (r.ok ? { ok: true, findings: r.findings } : { ok: false, error: r.error });
+    return { toolId: a.id, ...g, raw: { clean: strip(cleanRun), faulty: strip(faultyRun) } };
   }));
+  raw.push({ id: c.id, resource: c.resource ?? null, runs: Object.fromEntries(results.map((r) => [r.toolId, r.raw])) });
+  for (const r of results) delete r.raw;
   details[c.id] = { id: c.id, title: c.title, requirement: c.requirement, clean: c.clean, faulty: c.faulty, results };
   const line = results.map((r) => `${r.toolId}=${r.status}`).join(' ');
   console.log(`  [${String(n + 1).padStart(String(cases.length).length)}/${cases.length}] ${c.id}: ${line}`);
@@ -87,6 +92,14 @@ const run = {
   tools: summary.tools,
   faults: summary.faults,
   cases: details,
+  raw,
+  provenance: {
+    corpusSha256,
+    terragoatDir: rel(terragoatDir),
+    node: process.version,
+    platform: process.platform,
+    sandboxed: process.platform === 'darwin',
+  },
 };
 await writeStoredRun(outFile, run);
 
@@ -99,4 +112,4 @@ console.log(`\nHeuristic pick: ${h.toolId}. It missed ${h.missed} of ${cases.len
 if (summary.ties.length > 1) console.warn(`Warning: TerraGoat tie between ${summary.ties.join(', ')}; picked ${h.toolId} (first in id order).`);
 const errors = summary.tools.reduce((s, t) => s + t.error, 0);
 if (errors) console.warn(`Warning: ${errors} ERROR results. Check the adapters before treating this run as evidence.`);
-console.log(`Wrote ${rel(outFile)} (run ${run.runId})`);
+console.log(`Wrote ${rel(outFile)} (run ${run.runId}). Next: npm run value-check`);

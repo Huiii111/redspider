@@ -21,13 +21,27 @@ tests/heldout/
   "id": "rds-public",
   "title": "Database is reachable from the internet",
   "requirement": {
-    "source": "NIST SP 800-53 Rev. 5",
-    "ref": "SC-7",
-    "text": "The requirement text the fault breaks"
-  }
+    "source": "CIS AWS Foundations Benchmark v3.0.0",
+    "ref": "2.3.3",
+    "text": "The requirement text the fault breaks",
+    "url": "https://..."
+  },
+  "resource": "aws_db_instance.main",
+  "change": "publicly_accessible set to true"
 }
 ```
 
-`title` is shown on screen in plain English. Any other keys in the file are ignored.
+| Field | Required | Meaning |
+|---|---|---|
+| `id` | Yes | Same as the folder name |
+| `title` | Yes | Shown on screen in plain English |
+| `requirement.source`, `ref`, `text` | Yes | The requirement the fault breaks |
+| `requirement.url` | No | Where the requirement text comes from |
+| `resource` | Strongly recommended | Terraform address the fault is planted on. The value check's ablation needs it on every case, and is skipped otherwise |
+| `change` | No | One line describing what was changed |
 
-The benchmark stops with an error naming the case if a folder is missing a file, has invalid JSON, or has identical clean and faulty files.
+Any other keys are ignored.
+
+The benchmark stops with an error naming the case if a folder is missing a file, has invalid JSON, has identical clean and faulty files, or has a `.tf` file that doesn't parse as Terraform. Scanners report nothing on a file they can't parse, which would count as a miss.
+
+`docs/prereg.md` asks for at least 20 pairs. `npm run value-check` warns if there are fewer.

@@ -1,23 +1,30 @@
 // Runs one adapter on one directory and turns every outcome into a run the grader understands.
 import { Findings } from './models.js';
 
-function withTimeout(promise, ms) {
+// The adapter kills its own process at timeoutMs. This backstop fires a little later, so a
+// well-behaved adapter always reports its own timeout and a hung one can't hang a request.
+const BACKSTOP_GRACE_MS = 5_000;
+
+function withTimeout(promise, ms, message) {
   let timer;
   const timeout = new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error(`timed out after ${ms / 1000}s`)), ms);
+    timer = setTimeout(() => reject(new Error(message)), ms);
   });
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
 /**
  * @returns {{ ok: true, findings, durationMs } | { ok: false, error, durationMs }}
- * The timeout here is a backstop so a hung adapter can't hang a request.
- * Killing the child process on timeout is the adapter's job (John's sandbox).
+ * Adapters receive scan(dir, { timeoutMs }). The second argument is optional for them to use.
  */
 export async function runTool(adapter, dir, timeoutMs) {
   const started = Date.now();
   try {
-    const raw = await withTimeout(Promise.resolve().then(() => adapter.scan(dir)), timeoutMs);
+    const raw = await withTimeout(
+      Promise.resolve().then(() => adapter.scan(dir, { timeoutMs })),
+      timeoutMs + BACKSTOP_GRACE_MS,
+      `timed out after ${Math.round(timeoutMs / 1000)}s`,
+    );
     const parsed = Findings.safeParse(raw);
     if (!parsed.success) {
       const issue = parsed.error.issues[0];
@@ -32,11 +39,12 @@ export async function runTool(adapter, dir, timeoutMs) {
 }
 
 export async function probeTool(adapter) {
+  const base = { id: adapter.id, name: adapter.name, license: adapter.license };
   try {
-    const version = await withTimeout(Promise.resolve().then(() => adapter.version()), 15_000);
+    const version = await withTimeout(Promise.resolve().then(() => adapter.version()), 20_000, 'version check timed out');
     if (typeof version !== 'string' || !version) throw new Error('version() returned no version');
-    return { id: adapter.id, name: adapter.name, available: true, version };
+    return { ...base, available: true, version };
   } catch (err) {
-    return { id: adapter.id, name: adapter.name, available: false, version: null, reason: err?.message || String(err) };
+    return { ...base, available: false, version: null, reason: err?.message || String(err) };
   }
 }

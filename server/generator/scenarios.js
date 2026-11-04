@@ -67,15 +67,15 @@ export const SCENARIOS = [
           ]),
         ],
         faults: [
-          { id: 's3-public-acls-allowed', title: 'Storage bucket accepts public ACLs', requirement: req('AC-3'), apply: setBinding(`${r}_block_public_acls`, b(false)) },
+          { id: 's3-public-acls-allowed', resource: `aws_s3_bucket_public_access_block.${r}`, change: 'block_public_acls set to false', title: 'Storage bucket accepts public ACLs', requirement: req('AC-3'), apply: setBinding(`${r}_block_public_acls`, b(false)) },
           {
-            id: 's3-encryption-removed', title: 'Storage bucket has no default encryption', requirement: req('SC-28'),
+            id: 's3-encryption-removed', resource: `aws_s3_bucket.${r}`, change: 'server-side encryption configuration removed', title: 'Storage bucket has no default encryption', requirement: req('SC-28'),
             apply(file) {
               const i = file.blocks.findIndex((x) => x.labels[0] === 'aws_s3_bucket_server_side_encryption_configuration' && x.labels[1] === r);
               file.blocks.splice(i, 1);
             },
           },
-          { id: 's3-versioning-suspended', title: 'Storage bucket versioning is suspended', requirement: req('CP-9'), apply: setBinding(`${r}_versioning`, s('Suspended')) },
+          { id: 's3-versioning-suspended', resource: `aws_s3_bucket_versioning.${r}`, change: 'versioning status set to Suspended', title: 'Storage bucket versioning is suspended', requirement: req('CP-9'), apply: setBinding(`${r}_versioning`, s('Suspended')) },
         ],
       };
     },
@@ -97,9 +97,9 @@ export const SCENARIOS = [
           ctx.tags(),
         ])],
         faults: [
-          { id: 'sg-ssh-open-to-world', title: 'SSH is open to the whole internet', requirement: req('SC-7'), apply: setBinding('admin_cidr', s('0.0.0.0/0')) },
+          { id: 'sg-ssh-open-to-world', resource: `aws_security_group.${r}`, change: 'SSH ingress CIDR set to 0.0.0.0/0', title: 'SSH is open to the whole internet', requirement: req('SC-7'), apply: setBinding('admin_cidr', s('0.0.0.0/0')) },
           {
-            id: 'sg-rdp-open-ipv6', title: 'Remote desktop is open to all IPv6 addresses', requirement: req('SC-7'),
+            id: 'sg-rdp-open-ipv6', resource: `aws_security_group.${r}`, change: 'ingress rule added for port 3389 from ::/0', title: 'Remote desktop is open to all IPv6 addresses', requirement: req('SC-7'),
             apply(file) {
               const blk = findBlock(file, 'aws_security_group', r);
               const at = blk.body.findIndex((i) => i.k === 'block' && i.name === 'egress');
@@ -137,9 +137,9 @@ export const SCENARIOS = [
           ctx.tags(),
         ], { countable: true })],
         faults: [
-          { id: 'rds-unencrypted', title: 'Database storage is not encrypted', requirement: req('SC-28'), apply: setBinding('db_storage_encrypted', b(false)) },
-          { id: 'rds-public', title: 'Database is reachable from the internet', requirement: req('SC-7'), apply: setBinding('db_publicly_accessible', b(true)) },
-          { id: 'rds-no-backups', title: 'Database automated backups are turned off', requirement: req('CP-9'), apply: setBinding('db_backup_retention_days', n(0)) },
+          { id: 'rds-unencrypted', resource: `aws_db_instance.${r}`, change: 'storage_encrypted set to false', title: 'Database storage is not encrypted', requirement: req('SC-28'), apply: setBinding('db_storage_encrypted', b(false)) },
+          { id: 'rds-public', resource: `aws_db_instance.${r}`, change: 'publicly_accessible set to true', title: 'Database is reachable from the internet', requirement: req('SC-7'), apply: setBinding('db_publicly_accessible', b(true)) },
+          { id: 'rds-no-backups', resource: `aws_db_instance.${r}`, change: 'backup_retention_period set to 0', title: 'Database automated backups are turned off', requirement: req('CP-9'), apply: setBinding('db_backup_retention_days', n(0)) },
         ],
       };
     },
@@ -156,7 +156,7 @@ export const SCENARIOS = [
           attr('type', s('gp3')),
           attr('encrypted', enc),
         ]).concat(ctx.tags()), { countable: true })],
-        faults: [{ id: 'ebs-unencrypted', title: 'Disk volume is not encrypted', requirement: req('SC-28'), apply: setBinding(`${r}_encrypted`, b(false)) }],
+        faults: [{ id: 'ebs-unencrypted', resource: `aws_ebs_volume.${r}`, change: 'encrypted set to false', title: 'Disk volume is not encrypted', requirement: req('SC-28'), apply: setBinding(`${r}_encrypted`, b(false)) }],
       };
     },
   },
@@ -170,7 +170,7 @@ export const SCENARIOS = [
           ctx.resource('aws_kms_key', r, [attr('description', s('Application data key')), attr('deletion_window_in_days', n(30)), attr('enable_key_rotation', rot), ctx.tags()]),
           ctx.resource('aws_kms_alias', r, [attr('name', s(`alias/${ctx.dnsName()}`)), attr('target_key_id', raw(`aws_kms_key.${r}.key_id`))]),
         ],
-        faults: [{ id: 'kms-rotation-off', title: 'Encryption key is never rotated', requirement: req('SC-12'), apply: setBinding('kms_key_rotation', b(false)) }],
+        faults: [{ id: 'kms-rotation-off', resource: `aws_kms_key.${r}`, change: 'enable_key_rotation set to false', title: 'Encryption key is never rotated', requirement: req('SC-12'), apply: setBinding('kms_key_rotation', b(false)) }],
       };
     },
   },
@@ -193,8 +193,8 @@ export const SCENARIOS = [
           ctx.tags(),
         ])],
         faults: [
-          { id: 'trail-validation-off', title: 'Audit log files can be altered without detection', requirement: req('AU-9'), apply: setBinding('trail_log_file_validation', b(false)) },
-          { id: 'trail-single-region', title: 'Audit trail records only one region', requirement: req('AU-12'), apply: setBinding('trail_multi_region', b(false)) },
+          { id: 'trail-validation-off', resource: `aws_cloudtrail.${r}`, change: 'enable_log_file_validation set to false', title: 'Audit log files can be altered without detection', requirement: req('AU-9'), apply: setBinding('trail_log_file_validation', b(false)) },
+          { id: 'trail-single-region', resource: `aws_cloudtrail.${r}`, change: 'is_multi_region_trail set to false', title: 'Audit trail records only one region', requirement: req('AU-12'), apply: setBinding('trail_multi_region', b(false)) },
         ],
       };
     },
@@ -211,7 +211,7 @@ export const SCENARIOS = [
       return {
         blocks: [ctx.resource('aws_iam_policy', r, [attr('name', s(`${bucket}-rw`)), attr('policy', policy(doc, ctx.pick(['heredoc', 'jsonencode'])))], { countable: true })],
         faults: [{
-          id: 'iam-wildcard-admin', title: 'Access policy grants every action on every resource', requirement: req('AC-6'),
+          id: 'iam-wildcard-admin', resource: `aws_iam_policy.${r}`, change: 'policy Action and Resource set to \"*\"', title: 'Access policy grants every action on every resource', requirement: req('AC-6'),
           apply(file) {
             const item = findBlock(file, 'aws_iam_policy', r).body.find((i) => i.key === 'policy');
             item.value.v.Statement[0].Action = '*';
@@ -235,7 +235,7 @@ export const SCENARIOS = [
           block('default_action', [], [attr('type', s('forward')), attr('target_group_arn', ctx.bind('target_group_arn', s('arn:aws:elasticloadbalancing:eu-west-1:111122223333:targetgroup/web/6d0ecf831eec9f09'), null, 'var'))]),
         ], { countable: true })],
         faults: [{
-          id: 'lb-plain-http', title: 'Load balancer serves traffic over plain HTTP', requirement: req('SC-8'),
+          id: 'lb-plain-http', resource: `aws_lb_listener.${r}`, change: 'listener changed to HTTP on port 80', title: 'Load balancer serves traffic over plain HTTP', requirement: req('SC-8'),
           apply(file) {
             const blk = findBlock(file, 'aws_lb_listener', r);
             setAttr(blk, 'port', n(80));

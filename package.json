@@ -12,13 +12,13 @@
     "server:fake": "node --env-file=.env.fake server/index.js",
     "benchmark:fake": "node --env-file=.env.fake server/scripts/benchmark.js",
     "dev:fake": "node server/scripts/generate.js && node --env-file=.env.fake server/scripts/benchmark.js && node --env-file=.env.fake server/index.js",
-    "test": "node --test \"tests/**/*.test.js\""
+    "test": "node --test \"tests/**/*.test.js\"",
+    "value-check": "node server/scripts/value-check.js",
+    "value-check:fake": "node --env-file=.env.fake server/scripts/value-check.js"
   },
   "dependencies": {
+    "@cdktf/hcl2json": "^0.21.0",
     "express": "^4.22.3",
     "zod": "^3.25.76"
-  },
-  "devDependencies": {
-    "@cdktf/hcl2json": "^0.21.0"
   }
 }

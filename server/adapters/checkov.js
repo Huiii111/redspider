@@ -1,35 +1,44 @@
-import { run, parseJson } from './_run.js';
+// Checkov adapter. Parse-error detection from Anton; list/object handling from John.
+import { config } from '../config.js';
+import { run, parseToolJson, versionFrom, ToolError } from './_run.js';
+
+const ID = 'checkov';
 
 export function parse(json) {
+  // One object per framework, or a list of them. With no resources Checkov prints only a summary.
   const reports = Array.isArray(json) ? json : [json];
-  return reports.flatMap((r) =>
-    (r.results?.failed_checks ?? []).map((c) => ({
-      toolId: 'checkov',
-      ruleId: c.check_id,
-      resource: c.resource ?? '',
-      severity: c.severity ?? null,
-      message: c.check_name ?? '',
-      line: c.file_line_range?.[0] ?? 0,
-    })),
-  );
+  const findings = [];
+  for (const report of reports) {
+    const summary = report.summary ?? report;
+    if (summary.parsing_errors > 0) throw new ToolError('Checkov could not parse this Terraform');
+    for (const c of report.results?.failed_checks ?? []) {
+      findings.push({
+        toolId: ID,
+        ruleId: c.check_id,
+        resource: c.resource ?? '',
+        severity: c.severity ?? null,
+        message: c.check_name ?? '',
+        line: c.file_line_range?.[0] ?? null,
+      });
+    }
+  }
+  return findings;
 }
 
 export default {
-  id: 'checkov',
+  id: ID,
   name: 'Checkov',
   license: 'Apache-2.0',
   async version() {
-    const { stdout } = await run('checkov', ['--version']);
-    return stdout.match(/\d+\.\d+\.\d+/)?.[0] ?? null;
+    const { stdout } = await run(config.bins.checkov, ['--version']);
+    return versionFrom('Checkov', stdout);
   },
-  async scan(dir) {
-    // Remote module download is off by default; stated explicitly anyway.
-    const { stdout, code } = await run(
-      'checkov',
-      ['-d', dir, '-o', 'json', '--framework', 'terraform', '--download-external-modules', 'false'],
-      { sandbox: true },
-    );
-    if (!stdout.trim()) throw new Error(`checkov produced no output (exit ${code})`);
-    return parse(parseJson('checkov', stdout));
+  async scan(dir, { timeoutMs } = {}) {
+    // Checkov exits 1 when it finds something; the result is decided from the report.
+    const { stdout } = await run(config.bins.checkov, [
+      '-d', dir, '-o', 'json', '--quiet', '--compact', '--framework', 'terraform',
+      '--skip-download', '--download-external-modules', 'false',
+    ], { sandbox: true, timeoutMs });
+    return parse(parseToolJson('Checkov', stdout));
   },
 };
