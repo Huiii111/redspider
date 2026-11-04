@@ -1,0 +1,65 @@
+I answered from the three images alone and did no outside lookups, except that the Q5 comparison comes from my own memory.
+
+## a.png
+
+**1. What is this? Who would use it, and in what situation?**
+
+It's a results page for "BlindSpots", a benchmark of security scanners for cloud setup code (Terraform). The makers hide 10 known problems in the code, run 3 scanners, and record which problems each one misses. Likely users are security leads or cloud/DevSecOps engineers who are choosing a scanner, or who want to know what a clean scan really proves.
+
+**2. What is the single most important thing it tells you? Why?**
+
+More warnings doesn't mean better coverage: the scanner with the most warnings (300) still missed 4 of the 9 problems it finished. The screen gives three reasons:
+- A problem only counts as caught if the scanner gave a new warning once the problem was there, so raw warning volume earns no credit.
+- At least one other scanner caught 2 of those 4 misses, because scanners miss different things.
+- A clean scan therefore only tells you something if you know what the scanner would have missed.
+
+The amber banner limits all of this, because the scanners and results are made up.
+
+**3. What would you do next, and where would you click?**
+
+I'd click the **"Missed, and no scanner caught it 2"** filter pill, in the row above the table (centre-left). Those are the real blind spots, and I could then open one of those rows to see the code. The page's intended next step is the red **"Try the scanners yourself"** button at upper left, which I'd click after that.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+- **Placeholder content:** rows read "Sample fault two" and "Breaks Sample source 0.0", and one title says "a long plain-English title to test wrapping". The scanners are just A, B and C.
+- **Confident claim on fake data:** the headline states a firm finding, while the banner says the results aren't real.
+- **Uneven comparisons:** the scanners are scored out of 9, 10 and 8, so the counts don't compare directly. Scanner C has the fewest misses (3) but also finished the fewest problems. Scanner B's line also has no "it finished" wording.
+- **Mixed description of the test project:** the headline calls it a "standard test project", but the panel describes TerraGoat as a practice project "full of deliberate flaws". That makes it an odd baseline for counting warnings.
+- **Cut-off table:** only 5 of the 10 rows are visible, and the fifth is clipped at the bottom.
+- **Hard-to-read label:** the "Couldn't finish" text sits on a hatched background.
+
+**5. What existing product does this most resemble?**
+
+MITRE ATT&CK Evaluations is the closest match, since it also tests named products against known scenarios and shows detection results for each one. Visually, the grid looks like caniuse.com, and the idea of planting faults resembles mutation testing tools such as Stryker.
+
+**6. Three most likely reasons a security lead would dismiss this**
+1. **The data isn't real:** the banner says so, and the scanners are anonymous, so it can't inform a buying decision.
+2. **The test is small and self-designed:** there are only 10 problems, chosen by the authors, and the page admits the results don't predict how often a scanner catches problems in real projects.
+3. **The scope is narrow:** it only covers Terraform code scanners, "not complete compliance products", and says nothing about noise, runtime risk or fit with their own setup. Some problems also went unfinished, which further limits the comparison.
+
+## b.png
+
+**7. Where does your eye go first? What sort of thing is this?**
+
+My eye goes first to the large white headline at upper left, then to the amber strip and amber cells. It's a small thumbnail of the same page, and almost everything except the headline is too small to read. It still reads as a dark-themed results or comparison page, with a message at the top and a grid below.
+
+## c.png
+
+**8. Structure, dominant element, empty areas and product type**
+
+This is the same layout with the text removed, from top to bottom:
+- A full-width amber banner
+- A nav bar with a red underline marking the active tab at right
+- A hero area with a red button at left and a boxed panel with 3 numbered steps at right
+- Three filter pills, one of them selected
+- A legend of three swatches
+- A bordered four-column table that runs off the bottom
+
+**Dominant:** the table takes up the lower half or so of the screen, and its repeating amber, navy and hatched cells draw the eye. The amber banner is the other strong element.
+
+**Empty areas:** the largest is the hero's upper left, above the red button. The table's first column and header are also nearly empty, with only thin link underlines left. These gaps exist because the text was removed, so they aren't real empty space in the design. The side margins are simply a dark background.
+
+**Product type:** this shape suits a comparison or benchmark matrix, where items run down the side, competitors run across the top, and each cell shows a status. It's typical of a developer or security tool's results page.
+
+## Final answer
+
+**B.** A test that hides known problems in code and shows which security scanners miss them.

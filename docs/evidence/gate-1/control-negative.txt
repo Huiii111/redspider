@@ -1,0 +1,20 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**1. Most important thing**
+
+The headline says **the scanner that reported the most warnings still missed 4 of the 10 problems hidden on purpose.** So more warnings doesn't mean better coverage, and a clean scan doesn't prove the code is safe. The screen's reason is that "a clean scan only tells you something if you know what the scanner would have missed."
+
+The test supports this by hiding 10 known problems in Terraform code, one at a time, then running 3 scanners with and without each problem. A scanner only gets credit if a new warning appears once the problem is there. At least one other scanner caught 2 of the 4 misses.
+
+The key caveat is the banner at the top: **this is sample data, so the scanners are made up and these aren't real test results.** The screen shows how the product would present its findings, but tells you nothing about any real scanner. Even with real data, the page says the results wouldn't predict how often a scanner catches problems in real projects.
+
+**2. What looks broken, empty, unfinished or contradictory**
+
+- **Missing results:** everything below the legend is blank, about half the screen. The "Scanner results" tab is selected and the "All hidden problems 10" filter is on, but there are no problem rows or per-scanner results. The image doesn't show whether they failed to load or were never built.
+- **Controls with nothing to act on:** the filters (10, 7 and 2) have nothing visible to filter, and the Caught, Missed and Couldn't finish legend has nothing to explain.
+- **Claims that can't be checked:** without results, nothing on screen backs up the 4-of-10 headline or the filter counts. The scanners also aren't named, including the one in the headline.
+- **Confident wording on made-up data:** the headline and "we hid" read as real findings, while the banner says the scanners and results aren't real. Only the banner signals this, so a headline quoted or screenshotted without it would be misleading.
+- **Unclear button promise:** "Try it on your own code" suggests analysing your own code, but the text beside it says "Change some code and see which scanners notice," and the nav says "Try the scanners yourself." It's also unclear what you'd be trying if the scanners are made up.
+- **Unclear test setup:** the headline mentions warnings on "a standard test project," but "How the test works" only describes the hidden problems in cloud setup code. It doesn't say what the standard project is or whether it's the same code.
+- **No count for "Couldn't finish":** this status is in the legend, but no filter or number shows how many runs it affected. That matters because these runs don't count against a scanner, so they could affect its score.
+
+The numbers themselves don't conflict. If 4 problems were missed and 2 of those were caught by another scanner, that leaves 2 that no scanner caught from those 4, which is consistent with the "Missed, and no scanner caught it 2" filter.

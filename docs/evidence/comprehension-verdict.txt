@@ -1,0 +1,132 @@
+FAIL (early check on sample data)
+
+The fail comes from one blocker under criterion 3, reported by all three judges and confirmed in a.png: the headline's premise, "the most warnings", has no visible basis. Every other criterion passed for every judge, and both controls are valid.
+
+
+CONTROLS
+
+Negative control: VALID.
+The judge reported the main content missing: "Missing results: everything below the legend is blank, about half the screen ... there are no problem rows or per-scanner results."
+Confirmed in negative.png: nothing appears below the legend.
+
+Label mutation: VALID.
+The judge noticed the contradiction: "This comes from the table and the subtext, not the headline, which says the opposite", and "Headline vs. data: 'Every scanner caught all 10 problems we hid' is contradicted by the scanner totals, the filter counts and the Missed badges."
+Confirmed in mutation.png. The judge took the meaning from the grid, so the screen's meaning does not rest on the headline alone.
+
+
+PER-JUDGE TABLE
+
+Criterion 1: viewer, main conclusion and reason
+  Judge 1: PASS
+    Viewer: "A security or platform engineer ... when choosing a scanner, or when checking how much a clean scan really proves."
+    Conclusion: "(Scanner A) still missed 4 of the 10 hidden problems."
+    Reason: "At least one other scanner caught 2 of those 4, so the misses were detectable."
+  Judge 2: PASS
+    Viewer: "A security or platform engineer ... when choosing a scanner."
+    Conclusion: "A clean scan doesn't prove much ... (Scanner A) still missed 4 of the 10 hidden problems."
+    Reason: "Another scanner caught 2 of those 4."
+  Judge 3: PASS
+    Viewer: "A security or platform engineer ... choosing a scanner, or when checking whether a clean scan ... can be trusted."
+    Conclusion: "(Scanner A) still missed 4 of the 10 hidden problems."
+    Reason: "at least one other scanner caught 2 of Scanner A's 4 misses."
+
+Criterion 2: forced choice (correct answer B)
+  Judge 1: PASS, "Final answer: B"
+  Judge 2: PASS, "B."
+  Judge 3: PASS, "B."
+
+Criterion 3: no blocker
+  Judge 1: FAIL, "the 'Most warnings' badge has no warning counts behind it."
+  Judge 2: FAIL, "the 'Most warnings' badge on Scanner A has no warning count anywhere on screen."
+  Judge 3: FAIL, "'Most warnings' has no warning counts behind it."
+
+Criterion 4: dominant element in c.png
+  Judge 1: PASS, "the table and its grid of navy, amber and hatched blocks take up the lower half."
+  Judge 2: PASS, "the table takes up roughly the lower half of the page, and its amber blocks stand out most."
+  Judge 3: PASS, "the table takes up the lower half or so of the screen ... Its three columns of status blocks ... draw the most attention."
+
+Criterion 5: not a generic admin dashboard (question 5)
+  Judge 1: PASS, "OWASP Benchmark ... AV-Comparatives ... a caniuse-style matrix."
+  Judge 2: PASS, "MITRE ATT&CK Evaluations ... the caniuse.com grid."
+  Judge 3: PASS, "the OWASP Benchmark ... a caniuse-style compatibility grid."
+
+Leakage: none found for any judge. "BlindSpots" and "Terraform" are both visible in a.png. No judge mentions the project's working name or the hackathon. The named comparison products answer question 5 from general knowledge.
+
+
+DISAGREEMENTS BETWEEN JUDGES
+
+First look at b.png:
+  Judges 1 and 2 went to the headline first. Judge 2 called the banner "a close second".
+  Judge 3 went to "the bright amber band across the top" first, then the headline.
+
+How to read Scanner C:
+  Judge 1 took the miss counts at face value: "Scanner C shows the fewest misses (3)". Judge 1 separately flagged the denominators.
+  Judge 2 rejected that reading: "Scanner C's 3 misses look best only because it ran on 8." Judge 2 also worked out that all three scanners caught 5 of 10.
+  Judge 3 said C "looks better" than B, but "the two aren't on the same base".
+  Only Judge 2 (and the mutation control) noticed the 5-of-5-of-5 tie.
+
+Whether the screen helps a decision:
+  Only Judge 2 objected that it gives "no clear winner". Judges 1 and 3 did not raise this.
+
+What to do first:
+  Judge 1 would open a row. Judges 2 and 3 would use the "Missed, and no scanner caught it" filter, then open a row.
+  All three are compatible with the key. None chose the red button first, and Judges 1 and 2 explicitly put it later.
+
+
+BLOCKERS VERIFIED AGAINST THE IMAGE
+
+1. Value claim with no visible basis. CONFIRMED in a.png.
+   The headline's contrast depends on "the scanner that reported the most warnings on a standard test project", and Scanner A carries a "Most warnings" badge. No warning count appears anywhere on the screen, for any scanner. "Standard test project" is also undefined (Judge 1; the negative control raised the same gap).
+   The "missed 4 of 10" half has a visible basis in the Scanner A column header. The "most warnings" half does not, and it is the half that creates the surprise.
+   This screenshot cannot show whether a count exists below the fold or inside a row. The test is what the judges could see, and they could not see one.
+
+Reported, but ruled not to be blockers:
+
+- Empty main visual: not present. The grid is filled in a.png.
+- False status: none reported. Rows 1 to 5 agree with the visible totals, as far as they can be checked. Rows 7 to 10 are not visible, so the totals cannot be fully confirmed from this image.
+- Contradiction between denominators and the legend: not a literal contradiction.
+  "Doesn't count against it" holds, because unfinished runs add no misses, and a denominator of 10 flatters the scanner rather than penalising it. It is a real comparability defect, so it is first on the polish list.
+- Cut-off text at row six: a page fold in a scrollable table, not truncated primary text.
+  a.png does cut the "Sample fault six" title in half at the bottom edge. The headline, the column headers and rows 1 to 5 are complete. This is a judgment call, so it is listed as polish.
+
+
+POLISH LIST (most reported first)
+
+1. Unequal denominators: "Missed 3 of 10" for a scanner that finished 8, and "Missed 4 of 10" for one that finished 9. This invites a ranking the data doesn't support. (Judges 1, 2, 3, mutation)
+2. One destination, several labels: "Try it on your own code", "Try the scanners yourself" and "Change some code". It is unclear whether you bring your own code or edit a sample. (Judges 1, 2, 3, both controls)
+3. The first screen ends at row six, so the totals cannot be checked against all 10 rows without scrolling. (Judges 1, 2, 3, mutation)
+4. The headline's "standard test project" sits beside "we hid these 10 problems ourselves", and the relationship between the two is unexplained. (Judge 2, negative control; Judge 1 on the undefined term)
+5. The strong headline sits above a small line saying results don't predict real-world catch rates. The caveat is honest but easy to miss. (Judge 3)
+6. Scanner B's header omits "Couldn't finish", where A and C show it. (Mutation only)
+7. The hatching behind "Couldn't finish" badges makes the text harder to read. Confirmed in a.png. (Mutation only)
+8. No filter or count shows how many runs couldn't finish. (Negative control only)
+
+
+LIMITS OF THIS RUN
+
+- The amber banner, made-up scanners, "Sample fault" titles, "Breaks Sample source 0.0" and "a long plain-English title to test wrapping" were expected here and are not counted as blockers. Every judge mentioned some of them.
+- A confident headline on made-up data (Judge 1, negative control) comes from the same sample-data condition.
+- This does not show whether the screen works with real data. The numbers, including the 5-of-5-of-5 tie, are sample values.
+- The amber banner competes for attention in b.png and c.png, so the first-look results may change once it is gone.
+- c.png was not seen blind. Judges saw a.png first and recognised the layout (Judge 1: "Both held text in a.png"; Judges 2 and 3: the same layout or page with text removed). Criterion 4 therefore shows the structure is consistent with the content, not that it communicates without text.
+- Each transcript opens with the same command-line warning, which suggests automated runs rather than people. If so, this is not evidence from human viewers.
+
+
+STRONGEST OBJECTIONS FROM QUESTION 6 (combined)
+
+1. No real evidence: sample data, and unnamed scanners with no versions, so there is nothing to act on. (Judges 1, 2, 3; expected in this run, and it must be gone before any real claim)
+2. Small, self-built test: 10 problems chosen by the authors, Terraform only, and the page itself says results don't predict real projects. Judge 2 adds possible bias. (Judges 1, 2, 3)
+3. Crude scoring: any new warning counts as a catch, even if unrelated to the hidden problem. This matches step 3 of "How the test works". (Judges 1, 3)
+4. Missing decision inputs: no false-positive rates (Judges 1, 2, 3); no scanner versions or configurations, so a miss could reflect setup (Judges 1, 3); no severity or fix effort (Judge 3); no cost of running (Judge 2).
+5. No help choosing: every scanner caught 5 of 10, so there is no clear winner. (Judge 2 only; a sample-data value, but the same could happen with real data)
+
+
+MOST COMMON MISUNDERSTANDING
+
+No judge misunderstood what the product is. The most common drift was in the takeaway.
+
+All three judges framed the point around warning volume: "more warnings doesn't mean better coverage" (Judges 1 and 2) and "many warnings or a clean scan doesn't prove good coverage" (Judge 3). The key's reason is that scanners miss different things, so a clean scan proves little.
+
+No judge stated that reason outright, though all three cited the "caught 2 of those 4" evidence and Judges 1 and 2 quoted or restated the clean-scan line. The headline's "most warnings" framing pulls readers towards warning volume, and that is the one part of the headline with no visible basis.
+
+A secondary risk is reading "Missed N of 10" as a ranking of scanners (see disagreements and polish item 1).

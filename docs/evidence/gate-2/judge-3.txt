@@ -1,0 +1,69 @@
+## a.png
+
+**1. What is this? Who would use it, and in what situation?**
+
+It's a results page for "BlindSpots", a benchmark of security scanners for cloud setup code (Terraform). The authors hide 10 known problems, run 3 scanners, and show which problems each one misses.
+
+A security or platform engineer might use it when choosing a scanner, or when checking whether a clean scan can be trusted.
+
+**2. What is the single most important thing it tells you? Why is that the case, according to the screen?**
+
+More warnings doesn't mean better coverage: the scanner with the most warnings (300) still missed 4 of the 9 problems it finished.
+
+The screen's reasoning is that scanners miss different things, as at least one other scanner caught 2 of those 4. So a clean scan "only tells you something if you know what it would have missed."
+
+The yellow banner says all of this is sample data, so this shows what the page would claim, not a real finding.
+
+**3. What would you do next, and where on the screen would you click?**
+
+I'd click the "Missed, and no scanner caught it 2" filter, in the row of pills just above the table, right of centre. Those are the gaps that switching or adding one of these scanners wouldn't fix. I'd then open one of those rows to see the code.
+
+The obvious alternative is the red "Try the scanners yourself" button, but I'd want to understand the gaps first.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+
+- **Placeholder content:** rows are titled "Sample fault two" and so on, one is literally "a long plain-English title to test wrapping", and each says "Breaks Sample source 0.0".
+- **Made-up data with a firm conclusion:** the banner says the scanners and results aren't real, yet the headline states a finding and the button invites you to try those scanners.
+- **Hedged headline:** the line under the hero says the results don't predict how often a scanner catches problems in real projects, which undercuts the large claim above it.
+- **Hard-to-compare totals:** the scanners are scored out of different numbers (4 of 9, 5 of 10, 3 of 8). Scanner C has the fewest misses but also the most unfinished runs.
+- **Inconsistent column header:** Scanner B has no "Couldn't finish" line, while A and C do.
+- **Colour clash:** the warning banner and the "Missed" badges share the same yellow, while "Caught" is a dim navy that fades into the background.
+- **Cut-off table:** the table runs off the bottom of the screen at row 5 of 10.
+
+**5. What existing product does this most resemble?**
+
+It most resembles a browser compatibility matrix like caniuse or wpt.fyi, with test cases as rows, the products being compared as columns, and a pass/fail cell at each intersection. The dark styling looks like a typical developer tool.
+
+**6. Give the three most likely reasons a security lead would dismiss this.**
+
+1. **Small, self-chosen test:** there are only 10 problems, picked by the authors, who admit the results don't predict real-world performance.
+2. **Nothing to act on:** the data is fake and the scanners are anonymous, so it can't inform a decision yet.
+3. **Weak and narrow measure:** any new warning counts as "Caught", even if it may not relate to the hidden problem. It doesn't measure false positives or whether warnings are useful, and it only covers code scanners, not complete compliance products.
+
+## b.png
+
+**7. Where does your eye go first? What sort of thing is this?**
+
+My eye goes first to the large white headline at the top left, then to the yellow banner and red button. At this thumbnail size, most of the small text is unreadable.
+
+It's a smaller version of the same page: a dark-themed web page with a bold claim on top and a comparison table with coloured status cells below.
+
+## c.png
+
+**8. Describe the structure. What is dominant? Is any large area empty? What kind of product has this shape?**
+
+This is the same layout with the text removed:
+- **Top:** a yellow strip and a navigation bar with one underlined tab.
+- **Hero:** a large area on the left holding only a red button, and a card on the right with steps 1, 2 and 3.
+- **Filters:** a row of three pills, then a three-item colour legend.
+- **Table:** a wide bordered table with a header, one wide left column and three narrower columns of status blocks.
+
+**Dominant:** the table takes up the most space and carries the visual rhythm through its blue, yellow and hatched blocks. The yellow strip is the brightest element.
+
+**Empty areas:** the biggest is the upper left of the hero above the red button, which is where the headline sits in a.png. The left column of the table and its header are also mostly blank, again because the text is gone.
+
+**Product type:** this shape suits a benchmark or comparison site, with items down the side, competitors across the top and a status in each cell. It could also pass for a test-results dashboard.
+
+## Final answer: **B**
+
+A test that hides known problems in code and shows which security scanners miss them.

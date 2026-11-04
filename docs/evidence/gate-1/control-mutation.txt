@@ -1,0 +1,30 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**1. The most important thing**
+
+The screen's main message is that **no scanner caught everything, so a clean scan doesn't prove your code is safe.** This comes from the table and the subtext, not the headline, which says the opposite.
+
+- **Scanner misses:** Scanner A missed 4 of 10, Scanner B missed 5 and Scanner C missed 3.
+- **Gaps across all three:** the filters show that 7 problems were missed by at least one scanner, and 2 weren't caught by any. "Sample fault four" is a visible example, marked Missed in all three columns.
+- **Why it matters:** the page says "A clean scan only tells you something if you know what the scanner would have missed."
+
+These numbers are only illustrative. The yellow banner says the scanners are made up and these aren't real test results, so this screen tells you nothing about any real tool.
+
+**2. What looks broken, empty, unfinished or contradictory**
+
+**Contradictions**
+- **Headline vs. data:** "Every scanner caught all 10 problems we hid" is contradicted by the scanner totals, the filter counts and the Missed badges. This is the most serious problem because it's the first thing people read, and it gives the opposite of the intended message.
+- **Dangling reference:** "At least one other scanner caught 2 of those 4" has no "4" to refer to, and "other" has no first scanner. It probably refers to Scanner A's 4 misses, so the headline may once have said that.
+- **Scoring:** the legend says "Couldn't finish" doesn't count against a scanner, yet totals still use "of 10". Scanner C's "3 of 10" is really 3 of the 8 it finished, and Scanner A's is 4 of 9.
+- **Comparison:** the "Most warnings" badge makes Scanner A look like the winner, but Scanner C missed fewer. All three actually caught 5 of 10 (A: 10−4−1, B: 10−5, C: 10−3−2).
+
+**Unfinished or placeholder content**
+- **Row titles:** they read "Sample fault two", "three" and so on. The first is "Sample fault one, a long plain-English title to test wrapping", which is leftover test text, and it doesn't even wrap.
+- **Row details:** every row says "Breaks Sample source 0.0", which is a placeholder rather than a real reference.
+- **Scanner names:** the columns are generic, "Scanner A/B/C".
+- **"Most warnings" badge:** no warning counts are shown anywhere, so it can't be checked.
+
+**Smaller inconsistencies**
+- **Scanner headers:** Scanner A and Scanner C show a "Couldn't finish" line, but Scanner B has none rather than showing 0.
+- **Call to action:** the button says "Try it on your own code", but the text beside it says "Change some code", and the nav says "Try the scanners yourself". It's unclear whether you bring your own code or edit a sample.
+- **Legibility:** the hatched background on the "Couldn't finish" badges runs behind the text and makes it harder to read.
+- **Cut-off table:** the screenshot ends at "Sample fault six", so I can't check rows 6–10. The totals may still add up, but I can only confirm them from the header numbers.

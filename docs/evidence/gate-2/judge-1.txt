@@ -1,0 +1,45 @@
+## a.png
+
+**1. What is this? Who would use it, and when?**
+It's a results page for a tool called BlindSpots. The team hides 10 known security problems in Terraform code, runs three scanners on it, and shows which problems each one misses. A security or platform engineer might use it when choosing a scanner, or when deciding how much to trust a clean scan.
+
+**2. What is the single most important thing it tells you? Why?**
+More warnings doesn't mean better coverage: the scanner with the most warnings (300) still missed 4 of the 9 problems it finished. According to the screen, this is because scanners miss different things. At least one other scanner caught 2 of those 4, so a clean scan only means something if you know what it would have missed.
+
+The amber banner limits all of this, because the scanners and results shown are made up.
+
+**3. What would you do next, and where would you click?**
+I'd click the red **Try the scanners yourself** button, at the left under the headline. The results here are sample data, so using my own code looks like the only route to something real. The same option is also at the top right of the navigation.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+- **Placeholder content:** the rows have names like "Sample fault one, a long plain-English title to test wrapping" and "Breaks Sample source 0.0". The scanners are just A, B and C.
+- **Bold claim on fake data:** the headline states a firm finding, but the banner says the results aren't real.
+- **Trying fake scanners:** the page invites you to try scanners it says are made up.
+- **Uneven totals:** the misses are out of 9, 10 and 8, and "Couldn't finish" doesn't count against a scanner. Scanner C has the fewest misses (3) partly because it finished the fewest tests.
+- **Mismatched evidence:** warning counts come from TerraGoat, while misses come from the hidden problems. The headline combines the two, and its "standard test project" is actually a practice project full of deliberate flaws.
+- **Self-undermining note:** a line under the headline says the results don't predict how often a scanner catches problems in real projects.
+- **Cut-off table:** only 5 of the 10 rows are visible, and the fifth is clipped.
+
+**5. What existing product does this most resemble?**
+It most resembles the MITRE ATT&CK Evaluations, which show how security vendors perform against known test cases. Its grid of features against products with status cells also looks a lot like Can I Use.
+
+**6. Three likely reasons a security lead would dismiss this**
+1. **The data isn't real:** the scanners are anonymous and the results are invented, so there's nothing to act on.
+2. **The sample is small and artificial:** there are only 10 problems, chosen by the authors, and the page itself says this doesn't predict real-world performance.
+3. **The scope is narrow and the method is open to challenge:** it only covers code scanning of Terraform, not complete compliance products. "Caught" only means a new warning appeared, which doesn't prove the warning was about the hidden problem, and unfinished runs are left out of the score.
+
+## b.png
+
+**7. Where does your eye go first? What sort of thing is this?**
+My eye goes first to the large white headline at the top left, then to the amber banner and the red button. It's a small thumbnail of the same page, and most of the small text is unreadable. It still reads as a dark-themed results or comparison page, with a bold claim above a table of coloured status cells.
+
+## c.png
+
+**8. Structure, dominant element, empty areas and product type**
+- **Structure:** this is the same layout with the text removed. From top to bottom, it has an amber strip, a thin navigation bar, a large left area with a red button, and a card on the right with steps 1, 2 and 3. Below those are three pills, a three-item legend and a large table with three status columns.
+- **Dominant:** the table takes up the bottom half or so of the screen, and its amber and navy cells draw the most attention. The amber banner is the other strong element.
+- **Empty areas:** the largest is the top left above the red button, where the headline would sit. The right-hand card, the table header and the table's wide first column are also nearly empty, and the first column shows only thin underlines.
+- **Product type:** this shape suggests a benchmark or comparison site, with a marketing-style top section above a grid of test cases against products.
+
+## Final answer: **B**
+It's a test that hides known problems in code and shows which security scanners miss them.

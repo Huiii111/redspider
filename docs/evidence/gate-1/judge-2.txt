@@ -1,0 +1,75 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+## Image a.png
+
+**1. What is this? Who would use it, and in what situation?**
+
+It's a results page for "BlindSpots", a benchmark of security scanners. The makers hide 10 known problems in Terraform cloud setup code, one at a time, and run 3 scanners with and without each problem. A scanner "catches" a problem only if it gives a new warning once the problem is there.
+
+A security or platform engineer would use it when choosing a scanner, or when checking what a clean scan from their current one really proves.
+
+**2. What is the single most important thing it tells you? Why is that the case, according to the screen?**
+
+A clean scan doesn't prove much, because even the noisiest scanner has blind spots. The headline says the scanner with the most warnings (Scanner A) still missed 4 of the 10 hidden problems. Another scanner caught 2 of those 4, so the page's conclusion is that "a clean scan only tells you something if you know what the scanner would have missed."
+
+More warnings doesn't mean better coverage here. By the header counts, all three scanners caught exactly 5 of 10:
+
+| Scanner | Missed | Couldn't finish | Caught |
+|---|---|---|---|
+| A | 4 | 1 | 5 |
+| B | 5 | 0 | 5 |
+| C | 3 | 2 | 5 |
+
+**3. What would you do next, and where on the screen would you click?**
+
+I'd click the "Missed, and no scanner caught it 2" filter pill, the third pill just above the table. Then I'd open one of the remaining rows to see the code. These are the gaps no scanner covers, so they matter most. "Sample fault four" is one row that all three scanners missed.
+
+The red "Try it on your own code" button, top left, is the page's intended next step. I'd go there after that, especially as this data is fake.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+
+- **Placeholder data:** the banner says the scanners and results are made up. Rows read "Sample fault two" and "Breaks Sample source 0.0", and one title is literally "...a long plain-English title to test wrapping".
+- **Missing evidence for the headline:** the "Most warnings" badge on Scanner A has no warning count anywhere on screen.
+- **Uneven comparison:** "Couldn't finish" doesn't count against a scanner, so "missed X of 10" compares different numbers of completed tests. Scanner C's 3 misses look best only because it ran on 8.
+- **Mixed framing:** the headline says "standard test project", while the note below says "we hid these 10 problems ourselves".
+- **Inconsistent labels:** the same destination seems to be called both "Try it on your own code" and "Try the scanners yourself".
+- **Cut-off table:** the table ends at the fold, partway through row six, so most of the rows that explain the totals aren't visible yet.
+
+**5. What existing product does this most resemble?**
+
+Conceptually, MITRE ATT&CK Evaluations, which tests security products against known behaviours and shows what each detected. Visually, it's closest to the caniuse.com grid of items against products.
+
+**6. Give the three most likely reasons a security lead would dismiss this.**
+
+1. **It isn't real evidence:** the scanners are unnamed and the results are made up, so there's nothing to act on.
+2. **The test is artificial and small:** there are only 10 self-chosen problems, in Terraform only. The page itself says the results don't predict real-world catch rates.
+3. **It doesn't help with a decision:** every scanner caught 5 of 10, so there's no clear winner. It also says nothing about false positives or the cost of running a scanner, and the authors chose the test themselves, which raises questions about bias.
+
+## Image b.png
+
+**7. Where does your eye go first? What sort of thing is this?**
+
+My eye goes first to the large white headline at the upper left, with the amber banner a close second. The amber cells in the table then pull it down and to the right.
+
+It's a tiny thumbnail of a dark-themed web page, and appears to be the same page as a.png. Even at this size it reads as a report with a big claim on top and a comparison table below.
+
+## Image c.png
+
+**8. Describe the structure. What is dominant? Is any large area empty? What kind of product has this shape?**
+
+This looks like the same layout with all the text removed. From top to bottom:
+- A full-width amber bar
+- A dark navigation bar, with a red underline marking the active tab
+- A hero area with a red button on the left and a three-step numbered panel on the right
+- A row of three pills, with the first one filled white
+- Three legend chips
+- A large table with a header row and three columns of status blocks
+
+**Dominant:** the table takes up roughly the lower half of the page, and its amber blocks stand out most against the navy ones. The amber bar and red button are the other strong accents.
+
+**Empty areas:** the largest is the upper left of the hero, above the red button. The three-step panel and the left side of the table rows are also nearly blank. Most of this space would normally hold text, so it isn't really unused, but no message survives without the words.
+
+**Product shape:** this is a comparison matrix under a marketing-style hero, as used by benchmark reports, test results dashboards and compatibility tables.
+
+## Final question
+
+**B.** A test that hides known problems in code and shows which security scanners miss them.

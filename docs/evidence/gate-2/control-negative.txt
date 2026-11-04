@@ -1,0 +1,27 @@
+**1. The most important thing**
+
+The headline says that the scanner with the most warnings on a standard test project (300) still missed 4 of the 9 problems it finished. In other words, more warnings doesn't mean better coverage.
+
+According to the screen, this is because scanners miss different things: at least one other scanner caught 2 of those 4. The page concludes that a clean scan "only tells you something if you know what it would have missed."
+
+**However, none of this is real evidence.** The orange banner says the scanners are made up and these aren't real test results, so the page only shows what the finding would look like.
+
+**2. What looks broken, empty, unfinished or contradictory**
+
+**Broken or empty**
+- **Results are missing:** the "All hidden problems" filter is selected and shows 10, but no results appear. The filters and the Caught / Missed / Couldn't finish legend sit above about 400px of blank space, with no rows, loading indicator or empty-state message. The page may have failed to render or still be loading.
+- **The headline can't be checked:** with no table, nothing on screen backs up the 300, the 4 of 9, or the filter counts of 7 and 2.
+- **The scanners aren't identified:** the headline scanner is unnamed, and the 3 scanners mentioned in the method box aren't listed anywhere.
+
+**Contradictory**
+- **Fake data, factual wording:** the banner says the results are made up, but the headline and method box state them as fact ("still missed," "We hid," "We also ran").
+- **Made-up scanners you can try:** the banner says the scanners are made up, but the page invites you to "Try the scanners yourself" and "bring your own code." It's unclear whether that would run real scanners, and therefore whether your results would be real.
+- **Disclaimer vs. headline:** the small print says the results don't predict how often a scanner catches problems in real projects. The large text still draws a general conclusion that "Scanners miss different things."
+- **A disclaimer that doesn't fit:** "These are code scanners, not complete compliance products" describes real products, which sits oddly with scanners that are made up.
+
+**Unclear or unfinished**
+- **Different baselines:** the headline's 300 warnings come from the practice project, TerraGoat, while the 4 of 9 comes from the 10 hidden problems. The headline reads as if they come from one test, and "standard test project" is only explained in the side box, without being linked to TerraGoat.
+- **The missing tenth problem:** "4 of the 9" implies one problem didn't finish, but only the legend's "Couldn't finish" entry hints at this. The page never says so directly.
+- **Hard-to-read badge:** the hatched background on the "Couldn't finish" badge makes its label harder to read than the other two.
+
+The numbers I could cross-check are consistent: 9 finished out of 10 fits the "Couldn't finish" status, and the 2 of 4 caught elsewhere leaves 2 that this scanner and the others all missed, matching "no scanner caught it: 2." That match is only suggestive, since the rows that would confirm it are missing.

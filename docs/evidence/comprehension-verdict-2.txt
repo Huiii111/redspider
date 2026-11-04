@@ -1,0 +1,206 @@
+PASS (early check on sample data)
+
+This PASS covers whether still screenshots of one screen are understood. It does not
+show that the findings are true: the scanners and results on screen are made up.
+
+
+CONTROLS
+
+Negative control: VALID.
+  Judge reported: "Results are missing: the 'All hidden problems' filter is selected and
+  shows 10, but no results appear ... about 400px of blank space, with no rows, loading
+  indicator or empty-state message."
+  Checked against negative.png: the area below the legend is blank.
+  Finding: this judge still stated the main conclusion and its reason with no grid. The
+  conclusion is therefore carried by the headline, and the judges' correct conclusion
+  does not by itself show that the grid was read. The judge added: "nothing on screen
+  backs up the 300, the 4 of 9, or the filter counts."
+
+Label mutation: VALID.
+  Judge reported: "'Every scanner caught all 10 problems we hid' is contradicted by the
+  column totals, the amber 'Missed' cells and the 'Missed by at least one scanner: 7'
+  filter ... the headline is probably the part that's wrong."
+  Checked against mutation.png: the false headline is present and the grid is unchanged.
+  The judge did not repeat the false headline, and recovered "No scanner catches
+  everything, so a clean scan doesn't prove your code is safe."
+  Finding: the judge did not recover the warnings point, that the scanner with the most
+  warnings still missed problems. They quoted the misses but not the "Most warnings" tag,
+  and read the 300, 200 and 100 counts as possible placeholders. The grid alone carries
+  "scanners differ and all miss". The warnings comparison rests on the headline.
+  Also: the unchanged subhead's "those 4" gave this judge a second cue ("Dangling
+  reference"), so the grid was not the only signal.
+
+
+PER-JUDGE TABLE
+
+Criterion 1: viewer, main conclusion and reason
+  Judge 1: MET. Viewer: "A security or platform engineer ... when choosing a scanner, or
+    when deciding how much to trust a clean scan." Conclusion: "the scanner with the most
+    warnings (300) still missed 4 of the 9 problems it finished." Reason: "scanners miss
+    different things. At least one other scanner caught 2 of those 4."
+  Judge 2: MET. Viewer: "security leads or cloud/DevSecOps engineers who are choosing a
+    scanner." Conclusion: same, 4 of 9. Reason: "At least one other scanner caught 2 of
+    those 4 misses, because scanners miss different things."
+  Judge 3: MET. Viewer: "A security or platform engineer ... when choosing a scanner, or
+    when checking whether a clean scan can be trusted." Conclusion: same, 4 of 9. Reason:
+    "scanners miss different things, as at least one other scanner caught 2 of those 4."
+
+Criterion 2: forced choice (correct answer is B)
+  Judge 1: MET, "Final answer: B".
+  Judge 2: MET, "B."
+  Judge 3: MET, "Final answer: B".
+
+Criterion 3: no blocker
+  Judge 1: MET. Every item sorted as polish or a limit of this run; see the rulings below.
+  Judge 2: MET. Same.
+  Judge 3: MET. Same.
+
+Criterion 4: dominant element in c.png
+  Judge 1: MET. "the table takes up the bottom half or so of the screen, and its amber
+    and navy cells draw the most attention."
+  Judge 2: MET. "the table takes up the lower half or so of the screen, and its repeating
+    amber, navy and hatched cells draw the eye."
+  Judge 3: MET. "the table takes up the most space and carries the visual rhythm through
+    its blue, yellow and hatched blocks."
+  Checked against c.png: the table runs from about y=515 to the bottom of the 900px image.
+
+Criterion 5: not a generic admin dashboard in question 5
+  Judge 1: MET. "MITRE ATT&CK Evaluations ... a lot like Can I Use."
+  Judge 2: MET. "MITRE ATT&CK Evaluations ... caniuse.com ... mutation testing tools such
+    as Stryker."
+  Judge 3: MET. "a browser compatibility matrix like caniuse or wpt.fyi."
+  Watch item: outside question 5, Judge 3's question 8 says the shape "could also pass
+  for a test-results dashboard." That does not fail the criterion.
+
+Leakage: none found in any judge or control.
+  BlindSpots, TerraGoat, Terraform and the compliance wording are all on screen. No judge
+  mentions the project's internal name or the hackathon. The question 5 comparisons come
+  from general knowledge, which that question asks for, and Judge 2 says so.
+
+Independence caveat: "More warnings doesn't mean better coverage" appears word for word
+in Judges 1, 2 and 3 and in the negative control, and it is not on screen. Their question
+1 answers are also very similar. I can't tell why from these files. This is not leakage,
+but the agreement should not be read as three fully independent samples.
+
+
+DISAGREEMENTS BETWEEN JUDGES
+
+Next action:
+  Judge 1 would press the red button. Judges 2 and 3 would first use the "Missed, and no
+  scanner caught it 2" filter and open a row. The key accepts both. Judge 3 prefers the
+  filter over the button; Judge 2 calls the button the "page's intended next step".
+  The button did not win all three judges.
+
+Filter position:
+  Judge 2 says "centre-left" and Judge 3 says "right of centre". In a.png the pill spans
+  about x=511 to 746 of 1440, so Judge 2 is right. Minor.
+
+Closest product:
+  Judges 1 and 2 lead with MITRE ATT&CK Evaluations, a security benchmark. Judge 3 names
+  only browser compatibility matrices. So the security-benchmark reading is 2 of 3.
+
+Viewer:
+  All three name technical security or platform roles. None names the compliance or GRC
+  person the key gives as an example. This meets the criterion, but that part of the
+  audience did not show up in any answer.
+
+Self-undermining caveat:
+  Judges 1 and 3 list the "don't predict" line as something wrong with the screen. Judge 2
+  uses it only as a dismissal reason.
+
+Text-free image:
+  Judge 2 says the gaps exist "because the text was removed, so they aren't real empty
+  space". Judge 3 agrees for the hero and table. Judge 1 lists them as empty areas but
+  also says the top left is where the headline would sit. No judge reports a real empty area.
+
+
+BLOCKERS VERIFIED AGAINST THE IMAGE
+
+None. Each candidate was checked against a.png:
+
+Empty main visual: not present. The grid is populated.
+
+Contradiction between parts of the screen: not found in the visible numbers.
+  Scanner A: 9 finished + 1 unfinished = 10. Scanner C: 8 + 2 = 10. Scanner B: 10.
+  In the visible rows, A misses fault two (B and C caught it) and fault four (nobody
+  caught it). That is consistent with "2 of those 4" and "no scanner caught it 2".
+
+False status: not found. The banner discloses the sample data.
+
+Cut-off primary text: not a blocker, by my ruling. All three judges report it.
+  Row 5's subtitle is cut by the bottom edge of the 900px image. This is the screen edge,
+  not text clipped inside a component. The stills cannot prove that the page scrolls.
+
+Value claim with no visible basis: not a blocker. The 300 and the 4 of 9 appear in Scanner
+  A's column header, and the method panel defines "caught".
+
+"Standard test project" against "practice project full of deliberate flaws" (Judges 1 and
+  2): polish, by my ruling. These are different descriptions of one project, not
+  conflicting facts. See polish item 1.
+
+What I could not verify: only 5 of the 10 rows appear in any image. The totals 4/5/3 and
+the filter counts 7 and 2 are consistent with those rows, but I could not confirm them
+across all 10. No interaction was tested, including opening a row, the filters or the button.
+
+
+LIMITS OF THIS RUN (expected, not blockers)
+
+- Amber banner: the scanners are made up and the results are not real. All judges and
+  both controls mention it.
+- "Sample fault" titles, "a long plain-English title to test wrapping", "Breaks Sample
+  source 0.0" and the names Scanner A/B/C.
+- A firm headline finding sits over data the banner says is not real.
+- "Try the scanners yourself" sits beside "these scanners are made up" (Judges 1 and 3,
+  and both controls). This is the closest call in the run, because it is a real tension
+  between two parts of the screen. I treated it as a limit because it exists only through
+  the banner's wording. It must be checked again on real data, and the lead may want to
+  rule on it separately.
+- Comprehension by a non-technical reader was not shown. All three judges answer in
+  technical terms, so the key's "should also make sense to a non-technical person" is untested.
+- Key mismatch: the key names the button "Try it on your own code" and the screen says
+  "Try the scanners yourself". Judges reported what the screen says. No grade was affected.
+
+
+POLISH LIST
+
+1. The warning-count project has three descriptions: "standard test project" in the
+   headline, "TerraGoat, a public practice project full of deliberate flaws" in the panel,
+   and "the test project" in the column header. Nothing on screen supports "standard".
+   The headline joins the 300 and the 4 of 9, which come from different tests, and only
+   the panel shows this. (Judges 1 and 2, negative control)
+2. Totals are out of 9, 10 and 8, so Scanner C has the fewest misses partly because it
+   finished the fewest. (Judges 1, 2 and 3, mutation control)
+3. The grid breaks off at row 5 of 10, with that row clipped. Only 2 of Scanner A's 4
+   misses are visible, so the headline can't be fully checked without scrolling.
+   (Judges 1, 2 and 3, mutation control)
+4. Scanner B's header has no "Couldn't finish" line or "it finished" wording, unlike A and
+   C. (Judges 2 and 3, mutation control)
+5. The "don't predict" caveat is needed, but it reads as undercutting the general claim
+   "Scanners miss different things". (Judges 1 and 3, negative control)
+6. The hatching behind the "Couldn't finish" label makes it harder to read. Confirmed in
+   a.png, though it is still legible. (Judge 2, negative control)
+7. The banner and the "Missed" badges share one amber, and "Caught" is a dim navy that
+   fades into the background. (Judge 3)
+
+
+STRONGEST OBJECTIONS FROM QUESTION 6, COMBINED
+
+1. Small, self-chosen test (Judges 1, 2 and 3): only 10 problems, picked by the authors,
+   and the page itself says results don't predict real-world performance.
+2. Weak measure (Judges 1 and 3; Judge 2 raises the unfinished runs and noise): any new
+   warning counts as "Caught", without showing it relates to the hidden problem. Unfinished
+   runs are left out of the score, and false positives and warning usefulness aren't measured.
+3. Narrow scope (Judges 1, 2 and 3): only code scanning of Terraform, "not complete
+   compliance products", and nothing on runtime risk or fit with their own setup.
+
+Also raised by all three, but a limit of this run: the data is not real and the scanners
+are anonymous, so nothing can be acted on. Real results remove the anonymity objection;
+objections 1 to 3 would remain.
+
+
+MOST COMMON MISUNDERSTANDING
+
+None. All three judges read the product and the conclusion correctly and chose B.
+The nearest thing is friction, not misreading: the 300 and the 4 of 9 come from different
+tests while the headline reads as one result (Judges 1 and 2, negative control). Each of
+them noticed this.

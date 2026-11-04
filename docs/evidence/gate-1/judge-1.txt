@@ -1,0 +1,55 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+## Image a.png
+
+**1. What is it, who would use it, and when?**
+It's a results page for "BlindSpots", a benchmark of security scanners. The makers hide 10 known problems in Terraform cloud setup code, run 3 scanners, and record which problems each one misses. A security or platform engineer might use it when choosing a scanner, or when checking how much a clean scan really proves.
+
+**2. What is the single most important thing it tells you?**
+The scanner with the most warnings (Scanner A) still missed 4 of the 10 hidden problems, so more warnings doesn't mean better coverage. The screen supports this in two ways:
+- A scanner only counts as catching a problem if it gives a new warning once the problem is there, so its total warning count earns no credit.
+- At least one other scanner caught 2 of those 4, so the misses were detectable. The page's conclusion is that "a clean scan only tells you something if you know what the scanner would have missed."
+
+The amber banner undercuts all of this, as these are made-up scanners and not real results.
+
+**3. What would you do next, and where would you click?**
+I'd check the evidence first by clicking the "Sample fault four" row at about (170, 787), which all three scanners missed. The table says "Open any row to see the code". To see only the problems like this one, I'd use the "Missed, and no scanner caught it 2" filter at about (628, 417). The red "Try it on your own code" button at about (195, 313) comes after that.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+- **Placeholder content:** the rows read "Sample fault two", "Breaks Sample source 0.0" and "a long plain-English title to test wrapping".
+- **Confident claim on fake data:** the headline states a finding, while the banner says the results aren't real.
+- **Inconsistent denominators:** "Couldn't finish" supposedly doesn't count against a scanner, but scores are still "of 10". Scanner A really ran on 9 and Scanner C on 8.
+- **Misleading focus:** the headline singles out Scanner A, but Scanner C shows the fewest misses (3) and Scanner B the most (5).
+- **Missing numbers:** the "Most warnings" badge has no warning counts behind it.
+- **Unexplained wording:** "standard test project" is never defined.
+- **Mismatched labels:** the nav says "Try the scanners yourself", while the button says "Try it on your own code".
+- **Cut-off table:** the table runs off the bottom at row six, so the total scores can't be checked against all 10 rows.
+
+**5. What existing product does it most resemble?**
+OWASP Benchmark is the closest in concept, since it also tests scanners against seeded flaws. AV-Comparatives is similar as a head-to-head detection test, and the layout looks like a caniuse-style matrix.
+
+**6. Three most likely reasons a security lead would dismiss it:**
+1. **No real evidence:** the data is sample data and the scanners are anonymous, so it can't inform a decision.
+2. **Small, self-selected test:** the makers chose the 10 problems themselves and admit the results don't predict real-world catch rates.
+3. **Weak method:** any new warning counts as a catch, even if it isn't about the hidden problem. It also shows no false-positive rates, scanner versions or configurations, so a miss could just reflect the setup.
+
+## Image b.png
+
+**7. Where does your eye go first, and what is it?**
+It goes to the large white headline, then the red button, with the amber banner and amber table cells competing for attention. b.png is a small thumbnail of the same page, and little of the smaller text is legible. It reads as a dark-themed comparison or results page for a technical product, with a table of pass/fail statuses.
+
+## Image c.png
+
+**8. Structure, dominant element, empty areas and product type**
+c.png is the same layout with the text removed:
+- **Top:** an amber bar, then a dark nav with a red underline marking the active tab.
+- **Middle:** a two-column hero with a red button on the left and a card with 3 numbered steps on the right, followed by filter pills and a legend row.
+- **Bottom:** a full-width table with one wide column and three narrow status columns.
+
+**Dominant:** the table and its grid of navy, amber and hatched blocks take up the lower half, and the amber blocks draw the most attention.
+
+**Empty areas:** the largest is the left of the hero, above the red button, and the wide first column of the table is also mostly blank. Both held text in a.png, so they're empty only because the text was stripped. The side margins are the only truly empty space.
+
+**Product type:** a comparison matrix, such as a benchmark results page, test or CI status grid, or feature comparison table.
+
+## Final answer: **B**
+It's a test that hides known problems in code and shows which security scanners miss them.

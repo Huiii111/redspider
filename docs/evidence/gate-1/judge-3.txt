@@ -1,0 +1,54 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+I answered from the three images only. `b.png` looks like a small thumbnail of the same page as `a.png`, and `c.png` looks like the same page with its text removed.
+
+## Image a.png
+
+**1. What is it, who would use it, and when?**
+It's a results page for a product called BlindSpots. It hides 10 known security problems in Terraform (cloud setup code), runs 3 scanners with and without each problem, and shows which ones miss what. A security or platform engineer would use it when choosing a scanner, or when checking whether a clean scan from their current one can be trusted.
+
+**2. What is the most important thing it tells you, and why?**
+The scanner with the most warnings (Scanner A) still missed 4 of the 10 hidden problems, so many warnings or a clean scan doesn't prove good coverage. The screen gives two reasons:
+- **The test is direct:** a scanner only counts as catching a problem if a new warning appears once the problem is added.
+- **The misses were avoidable:** at least one other scanner caught 2 of Scanner A's 4 misses.
+
+**3. What would you do next, and where would you click?**
+I'd click the **"Missed, and no scanner caught it 2"** filter, the third pill above the table. Those are the gaps that switching scanners wouldn't fix. I'd then open a row such as "Sample fault four" to see the code. If I wanted to test my own code instead, I'd use the red **"Try it on your own code"** button.
+
+**4. What looks broken, empty, unfinished or contradictory?**
+- **Placeholder content:** the amber banner says the data is made up. Rows read "Sample fault two", "Breaks Sample source 0.0" and even "a long plain-English title to test wrapping".
+- **Unclear denominators:** "Couldn't finish" supposedly doesn't count against a scanner, yet Scanner C shows "Missed 3 of 10" with 2 unfinished, so it really completed only 8. It looks better than Scanner B's 5 of 10, but the two aren't on the same base.
+- **Unsupported claim:** "Most warnings" has no warning counts behind it.
+- **Mixed message:** the headline makes a strong claim, while the small line below says the results don't predict real-world catch rates.
+- **Inconsistent wording:** the same action appears as "Try the scanners yourself", "Try it on your own code" and "Change some code".
+- **Cut-off table:** the table runs past the bottom of the screen at row six, so the remaining rows aren't visible here.
+
+**5. What existing product does it most resemble?**
+In concept, the OWASP Benchmark, which scores security tools against planted flaws. In layout, it resembles a caniuse-style compatibility grid, with items down the side and products across the top.
+
+**6. Three likely reasons a security lead would dismiss it**
+1. **There's no real evidence:** the data is sample data, and the scanners are unnamed with no versions shown.
+2. **The test is small and self-built:** the authors chose the 10 problems themselves and admit the results don't predict real projects.
+3. **The scoring is crude:** any new warning counts as a catch, even if it's unrelated to the hidden problem. It also shows nothing about false positives, severity or fix effort, and unfinished runs muddy the totals.
+
+## Image b.png
+
+**7. Where does your eye go first, and what is it?**
+My eye goes first to the bright amber band across the top, then the large white headline, and then the red button and amber cells. Most of the small text is unreadable, but it's clearly a dark-themed web page with a results or comparison table.
+
+## Image c.png
+
+**8. Structure, dominant element, empty areas and product type**
+- **Structure, from top to bottom:**
+  - A full-width amber band
+  - A thin nav bar with a red underline on the active tab at the right
+  - A hero area with a red button on the left and a card with three numbered steps on the right
+  - A row of three pills
+  - A three-item legend of colour swatches
+  - A large bordered table
+- **Dominant element:** the table takes up the lower half or so of the screen and continues past the bottom. Its three columns of status blocks, especially the amber ones, draw the most attention, and the amber band is the strongest single element up top.
+- **Empty areas:** the largest is the top-left of the hero above the red button, where the headline would sit. The left part of each table row is also nearly blank, with only thin underlines, and the step card is empty apart from its numbers. These gaps mostly come from the missing text rather than from the layout itself.
+- **Product type:** a comparison matrix, such as a benchmark results page, a vendor comparison or a test-results dashboard.
+
+## Final answer
+
+**B.** A test that hides known problems in code and shows which security scanners miss them.

@@ -1,0 +1,28 @@
+**1. The most important thing**
+
+No scanner catches everything, so a clean scan doesn't prove your code is safe. The table shows this, although the headline says the opposite (see below).
+
+According to the screen, this is because scanners miss different things, so a clean scan "only tells you something if you know what it would have missed":
+- **Every scanner has misses:** Scanner A missed 4 of the 9 problems it finished, B missed 5 of 10, and C missed 3 of 8.
+- **The misses differ:** Fault two is missed only by A, while fault three is missed by B and caught by A.
+- **Some problems get past all three:** The filter shows 2 problems that no scanner caught, and fault four is one of the problems all three missed.
+
+The top banner limits all of this: the scanners are made up and the results aren't real, so the page says nothing yet about actual tools. Even with real results, the page warns that they wouldn't predict how often a scanner catches problems in real projects.
+
+**2. What looks broken, empty, unfinished or contradictory**
+
+**Contradictions**
+- **Headline vs. data:** "Every scanner caught all 10 problems we hid" is contradicted by the column totals, the amber "Missed" cells and the "Missed by at least one scanner: 7" filter. The other numbers fit together, so the headline is probably the part that's wrong.
+- **Dangling reference:** "2 of those 4" refers to a 4 that the headline never mentions. It probably means Scanner A's 4 misses, which suggests the headline was meant to be about those.
+- **Made-up scanners vs. call to action:** The page says the scanners are made up, yet invites you to "Try the scanners yourself" and "bring your own code". It's unclear what you'd really be running.
+
+**Unfinished or placeholder content**
+- **Row titles:** "Sample fault two", "Sample fault three" and so on say nothing about the actual problem. "Sample fault one, a long plain-English title to test wrapping" is test text, and it doesn't even wrap.
+- **Row subtitles:** Every visible row has the same meaningless "Breaks Sample source 0.0".
+- **Scanner names and counts:** "Scanner A/B/C" are generic names, and the warning counts of exactly 300, 200 and 100 also look like placeholders.
+
+**Inconsistent or empty**
+- **Scanner summaries:** B says "Missed 5 of 10" and has no "Couldn't finish" line, while A and C say "of 9 it finished" and "of 8 it finished" and list their unfinished runs. B should probably show "Couldn't finish 0".
+- **Hard-to-compare totals:** The scanners are scored out of 9, 10 and 8, so C can look best partly because it finished the fewest.
+- **Empty space:** There is a large blank area under the red button, to the left of the "How the test works" panel.
+- **Cut-off table:** Only 5 of the 10 rows are visible, and the fifth is cut off at the bottom of the screen. This may just be where the screenshot ends.
