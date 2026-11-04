@@ -30,6 +30,9 @@ function fail(msg) {
   process.exit(1);
 }
 
+// Check configuration before doing any slow work.
+if (!terragoatDir) fail('TerraGoat path not set. Clone https://github.com/bridgecrewio/terragoat and pass --terragoat <dir>/terraform/aws (or set TERRAGOAT_DIR).');
+
 // 1. Tools. A missing tool would turn a whole column into ERROR, so stop instead.
 const adapters = await loadAdapters(config.adaptersDir);
 if (adapters.length === 0) fail(`no adapters in ${rel(config.adaptersDir)}`);
@@ -48,7 +51,6 @@ try {
 console.log(`Corpus: ${cases.length} planted pairs from ${rel(corpusDir)}`);
 
 // 3. TerraGoat finding counts, for the "pick the noisiest tool" heuristic.
-if (!terragoatDir) fail('TerraGoat path not set. Clone https://github.com/bridgecrewio/terragoat and pass --terragoat <dir>/terraform/aws (or set TERRAGOAT_DIR).');
 console.log(`TerraGoat: scanning ${terragoatDir}`);
 const terragoat = await Promise.all(adapters.map((a) => runTool(a, terragoatDir, timeoutMs * 5)));
 const tgFailed = terragoat.map((r, i) => [adapters[i].id, r]).filter(([, r]) => !r.ok);
