@@ -27,4 +27,9 @@ export const config = Object.freeze({
   terragoatDir: process.env.TERRAGOAT_DIR ? path.resolve(root, process.env.TERRAGOAT_DIR) : null,
   maxInputBytes: int('MAX_INPUT_BYTES', 100 * 1024),
   toolTimeoutSeconds: int('TOOL_TIMEOUT_SECONDS', 60),
+  // Scanner sandbox (server/adapters/_run.js)
+  scanTimeoutMs: int('SCAN_TIMEOUT_MS', 30000),
+  brewBin: process.env.BREW_BIN || '/opt/homebrew/bin',
+  kicsQueriesPath: process.env.KICS_QUERIES_PATH || '/opt/homebrew/opt/kics/share/kics/assets/queries',
+  allowUnsandboxed: process.env.ALLOW_UNSANDBOXED === '1',
 });
