@@ -1,0 +1,14 @@
+{
+  "name": "scanner-blind-spots",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js",
+    "benchmark": "node server/scripts/benchmark.js",
+    "test": "node --test tests/"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "zod": "^4.6.7"
+  }
+}
