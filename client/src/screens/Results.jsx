@@ -176,11 +176,6 @@ function Benchmark({ benchmark }) {
         <HowTheTestWorks faultCount={corpus.faultCount} scannerCount={tools.length} />
       </div>
 
-      <p className="scope">
-        We hid these {corpus.faultCount} problems ourselves, so these results don't predict how often a scanner catches
-        problems in real projects. These are code scanners, not complete compliance products.
-      </p>
-
       <div className="grid-guide">
         <div className="filters" role="group" aria-label="Show hidden problems">
           {FILTERS.map(({ id, label }) => (
