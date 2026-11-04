@@ -19,8 +19,8 @@ function dir(name, fallback) {
 
 export const config = Object.freeze({
   root,
-  host: process.env.HOST || '127.0.0.1', // Demo only: not hardened for the public internet.
-  port: int('PORT', 3001),
+  host: process.env.BLINDSPOTS_HOST || '127.0.0.1', // Demo only: not hardened for the public internet.
+  port: int('BLINDSPOTS_PORT', 3101),
   adaptersDir: dir('ADAPTERS_DIR', 'server/adapters'),
   resultsFile: dir('RESULTS_FILE', 'results/benchmark.json'),
   corpusDir: dir('CORPUS_DIR', 'tests/heldout'),

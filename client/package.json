@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run",
-    "dev:sample": "vite --mode sample"
+    "test": "vitest run"
   },
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.3.0",

@@ -5,7 +5,7 @@ import { Finding } from '../server/core/models.js';
 import { parse as trivy } from '../server/adapters/trivy.js';
 import { parse as checkov } from '../server/adapters/checkov.js';
 import { parse as kics } from '../server/adapters/kics.js';
-import { parse as terrascan } from '../server/adapters/terrascan.js';
+import { parse as terrascan } from '../server/adapters/_terrascan.js';
 
 const fixture = (name) => JSON.parse(readFileSync(new URL(`./fixtures/${name}.json`, import.meta.url)));
 

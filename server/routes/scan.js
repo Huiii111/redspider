@@ -7,11 +7,12 @@ import { ScanRequest } from '../core/models.js';
 import { gradePair, toScanStatus } from '../core/grade.js';
 import { runTool } from '../core/runner.js';
 import { withTerraformDir } from '../core/workspace.js';
+import { terraformSyntaxError } from '../core/terraformSyntax.js';
 import { asyncRoute } from './_async.js';
 
 const MAX_CONCURRENT_SCANS = 2; // Each scan starts 2 processes per tool; cap it so the laptop stays responsive on stage.
 
-export function scanRouter({ config, getAdapters }) {
+export function scanRouter({ config, getAdapters, findSyntaxError = terraformSyntaxError }) {
   const r = Router();
   let inFlight = 0;
 
@@ -26,6 +27,14 @@ export function scanRouter({ config, getAdapters }) {
       const bytes = Buffer.byteLength(text, 'utf8');
       if (bytes > config.maxInputBytes) {
         throw new ApiError(413, 'INPUT_TOO_LARGE', `${name} is ${bytes} bytes; the limit is ${config.maxInputBytes}. Trim it to the resources you're testing.`);
+      }
+    }
+    // Scanners exit 0 on Terraform they can't parse, and Trivy reports its checks as passed,
+    // so a syntax error would otherwise read as a scanner staying silent.
+    for (const [name, text] of [['Before', before], ['After', after]]) {
+      const problem = await findSyntaxError(text);
+      if (problem) {
+        throw new ApiError(422, 'INVALID_TERRAFORM', `The ${name} version isn't valid Terraform, so no scanner could judge it fairly. ${problem}`);
       }
     }
     if (inFlight >= MAX_CONCURRENT_SCANS) {

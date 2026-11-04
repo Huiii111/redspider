@@ -30,11 +30,6 @@ export default function App() {
   const onTry = hash === '#/try'
   return (
     <>
-      {import.meta.env.MODE === 'sample' && (
-        <div className="sample-banner" role="alert">
-          Sample data: these scanners are made up and these aren't real test results.
-        </div>
-      )}
       <header className="topbar">
         <a className="wordmark" href="#/">
           Blind<span>Spots</span>
