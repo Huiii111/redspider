@@ -1,0 +1,5 @@
+ANGLE_LOCKED
+Human's own idea, replacing the tournament pick (card-1.md). The tournament gate was overridden by the human; docs/angles/judgement.md does not cover this angle.
+18:54:55
+
+HUMAN_OVERRIDE: the team chose its own idea instead of the tournament pick: a benchmarking platform that grades the output of open-source GRC solutions on how they audit code. No proposer card or blind judge covers this idea, and the frame in docs/frame.md was written for vendor review.

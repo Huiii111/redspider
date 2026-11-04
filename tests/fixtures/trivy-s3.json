@@ -1,0 +1,4355 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.1"
+  },
+  "ReportID": "01a1a814-8f18-7eb9-8fbc-afc698eab817",
+  "CreatedAt": "2026-11-04T19:41:22.072971Z",
+  "ArtifactName": "/private/tmp/claude-501/-Users-hook-Documents-coding-python-hackathon-claude-commmunity-hacakthon/534506e7-85c0-4728-b7ae-6f713896fa59/scratchpad/probe3/s3",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": ".",
+      "Class": "config",
+      "Type": "terraform",
+      "MisconfSummary": {
+        "Successes": 53,
+        "Failures": 0
+      }
+    },
+    {
+      "Target": "main.tf",
+      "Class": "config",
+      "Type": "terraform",
+      "MisconfSummary": {
+        "Successes": 0,
+        "Failures": 34
+      },
+      "Misconfigurations": [
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0086",
+          "Title": "S3 Access block should block public ACL",
+          "Description": "S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0086",
+          "Query": "data.builtin.aws.s3.aws0086.deny",
+          "Resolution": "Enable blocking any PUT calls with a public ACL specified",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0086",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0086"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0086",
+          "Title": "S3 Access block should block public ACL",
+          "Description": "S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0086",
+          "Query": "data.builtin.aws.s3.aws0086.deny",
+          "Resolution": "Enable blocking any PUT calls with a public ACL specified",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0086",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0086"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0086",
+          "Title": "S3 Access block should block public ACL",
+          "Description": "S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0086",
+          "Query": "data.builtin.aws.s3.aws0086.deny",
+          "Resolution": "Enable blocking any PUT calls with a public ACL specified",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0086",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0086"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0086",
+          "Title": "S3 Access block should block public ACL",
+          "Description": "S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0086",
+          "Query": "data.builtin.aws.s3.aws0086.deny",
+          "Resolution": "Enable blocking any PUT calls with a public ACL specified",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0086",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0086"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.logs",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 113,
+            "EndLine": 141,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 113,
+                  "Content": "resource \"aws_s3_bucket\" \"logs\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"logs\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 114,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-logs\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-logs\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 115,
+                  "Content": "  acl    = \"log-delivery-write\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"log-delivery-write\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 116,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 117,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 118,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 119,
+                  "Content": "  server_side_encryption_configuration {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  server_side_encryption_configuration {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 120,
+                  "Content": "    rule {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    rule {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 121,
+                  "Content": "      apply_server_side_encryption_by_default {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      apply_server_side_encryption_by_default {",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 122,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0086",
+          "Title": "S3 Access block should block public ACL",
+          "Description": "S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0086",
+          "Query": "data.builtin.aws.s3.aws0086.deny",
+          "Resolution": "Enable blocking any PUT calls with a public ACL specified",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0086",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0086"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0087",
+          "Title": "S3 Access block should block public policy",
+          "Description": "S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.\n",
+          "Message": "No public access block so not blocking public policies",
+          "Namespace": "builtin.aws.s3.aws0087",
+          "Query": "data.builtin.aws.s3.aws0087.deny",
+          "Resolution": "Prevent policies that allow public access being PUT",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0087",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0087"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0087",
+          "Title": "S3 Access block should block public policy",
+          "Description": "S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.\n",
+          "Message": "No public access block so not blocking public policies",
+          "Namespace": "builtin.aws.s3.aws0087",
+          "Query": "data.builtin.aws.s3.aws0087.deny",
+          "Resolution": "Prevent policies that allow public access being PUT",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0087",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0087"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0087",
+          "Title": "S3 Access block should block public policy",
+          "Description": "S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.\n",
+          "Message": "No public access block so not blocking public policies",
+          "Namespace": "builtin.aws.s3.aws0087",
+          "Query": "data.builtin.aws.s3.aws0087.deny",
+          "Resolution": "Prevent policies that allow public access being PUT",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0087",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0087"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0087",
+          "Title": "S3 Access block should block public policy",
+          "Description": "S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.\n",
+          "Message": "No public access block so not blocking public policies",
+          "Namespace": "builtin.aws.s3.aws0087",
+          "Query": "data.builtin.aws.s3.aws0087.deny",
+          "Resolution": "Prevent policies that allow public access being PUT",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0087",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0087"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.logs",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 113,
+            "EndLine": 141,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 113,
+                  "Content": "resource \"aws_s3_bucket\" \"logs\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"logs\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 114,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-logs\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-logs\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 115,
+                  "Content": "  acl    = \"log-delivery-write\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"log-delivery-write\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 116,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 117,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 118,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 119,
+                  "Content": "  server_side_encryption_configuration {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  server_side_encryption_configuration {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 120,
+                  "Content": "    rule {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    rule {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 121,
+                  "Content": "      apply_server_side_encryption_by_default {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      apply_server_side_encryption_by_default {",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 122,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0087",
+          "Title": "S3 Access block should block public policy",
+          "Description": "S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.\n",
+          "Message": "No public access block so not blocking public policies",
+          "Namespace": "builtin.aws.s3.aws0087",
+          "Query": "data.builtin.aws.s3.aws0087.deny",
+          "Resolution": "Prevent policies that allow public access being PUT",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0087",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0087"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0089",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-server-access-logging.html",
+            "https://avd.aquasec.com/misconfig/aws-0089"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0089",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-server-access-logging.html",
+            "https://avd.aquasec.com/misconfig/aws-0089"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0089",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-server-access-logging.html",
+            "https://avd.aquasec.com/misconfig/aws-0089"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0090",
+          "Title": "S3 Data should be versioned",
+          "Description": "Versioning in Amazon S3 is a means of keeping multiple variants of an object in the same bucket.\n\nYou can use the S3 Versioning feature to preserve, retrieve, and restore every version of every object stored in your buckets.\n\nWith versioning you can recover more easily from both unintended user actions and application failures.\n\nWhen you enable versioning, also keep in mind the potential costs of storing noncurrent versions of objects. To help manage those costs, consider setting up an S3 Lifecycle configuration.\n",
+          "Message": "Bucket does not have versioning enabled",
+          "Namespace": "builtin.aws.s3.aws0090",
+          "Query": "data.builtin.aws.s3.aws0090.deny",
+          "Resolution": "Enable versioning to protect against accidental/malicious removal or modification",
+          "Severity": "MEDIUM",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0090",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html",
+            "https://aws.amazon.com/blogs/storage/reduce-storage-costs-with-fewer-noncurrent-versions-using-amazon-s3-lifecycle/",
+            "https://avd.aquasec.com/misconfig/aws-0090"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0090",
+          "Title": "S3 Data should be versioned",
+          "Description": "Versioning in Amazon S3 is a means of keeping multiple variants of an object in the same bucket.\n\nYou can use the S3 Versioning feature to preserve, retrieve, and restore every version of every object stored in your buckets.\n\nWith versioning you can recover more easily from both unintended user actions and application failures.\n\nWhen you enable versioning, also keep in mind the potential costs of storing noncurrent versions of objects. To help manage those costs, consider setting up an S3 Lifecycle configuration.\n",
+          "Message": "Bucket does not have versioning enabled",
+          "Namespace": "builtin.aws.s3.aws0090",
+          "Query": "data.builtin.aws.s3.aws0090.deny",
+          "Resolution": "Enable versioning to protect against accidental/malicious removal or modification",
+          "Severity": "MEDIUM",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0090",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html",
+            "https://aws.amazon.com/blogs/storage/reduce-storage-costs-with-fewer-noncurrent-versions-using-amazon-s3-lifecycle/",
+            "https://avd.aquasec.com/misconfig/aws-0090"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0091",
+          "Title": "S3 Access Block should Ignore Public ACL",
+          "Description": "S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0091",
+          "Query": "data.builtin.aws.s3.aws0091.deny",
+          "Resolution": "Enable ignoring the application of public ACLs in PUT calls",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0091",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0091"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0091",
+          "Title": "S3 Access Block should Ignore Public ACL",
+          "Description": "S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0091",
+          "Query": "data.builtin.aws.s3.aws0091.deny",
+          "Resolution": "Enable ignoring the application of public ACLs in PUT calls",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0091",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0091"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0091",
+          "Title": "S3 Access Block should Ignore Public ACL",
+          "Description": "S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0091",
+          "Query": "data.builtin.aws.s3.aws0091.deny",
+          "Resolution": "Enable ignoring the application of public ACLs in PUT calls",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0091",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0091"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0091",
+          "Title": "S3 Access Block should Ignore Public ACL",
+          "Description": "S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0091",
+          "Query": "data.builtin.aws.s3.aws0091.deny",
+          "Resolution": "Enable ignoring the application of public ACLs in PUT calls",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0091",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0091"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.logs",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 113,
+            "EndLine": 141,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 113,
+                  "Content": "resource \"aws_s3_bucket\" \"logs\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"logs\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 114,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-logs\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-logs\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 115,
+                  "Content": "  acl    = \"log-delivery-write\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"log-delivery-write\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 116,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 117,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 118,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 119,
+                  "Content": "  server_side_encryption_configuration {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  server_side_encryption_configuration {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 120,
+                  "Content": "    rule {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    rule {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 121,
+                  "Content": "      apply_server_side_encryption_by_default {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      apply_server_side_encryption_by_default {",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 122,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0091",
+          "Title": "S3 Access Block should Ignore Public ACL",
+          "Description": "S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.\n",
+          "Message": "No public access block so not blocking public acls",
+          "Namespace": "builtin.aws.s3.aws0091",
+          "Query": "data.builtin.aws.s3.aws0091.deny",
+          "Resolution": "Enable ignoring the application of public ACLs in PUT calls",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0091",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0091"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0093",
+          "Title": "S3 Access block should restrict public bucket to limit access",
+          "Description": "S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.\n",
+          "Message": "No public access block so not restricting public buckets",
+          "Namespace": "builtin.aws.s3.aws0093",
+          "Query": "data.builtin.aws.s3.aws0093.deny",
+          "Resolution": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0093",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0093"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0093",
+          "Title": "S3 Access block should restrict public bucket to limit access",
+          "Description": "S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.\n",
+          "Message": "No public access block so not restricting public buckets",
+          "Namespace": "builtin.aws.s3.aws0093",
+          "Query": "data.builtin.aws.s3.aws0093.deny",
+          "Resolution": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0093",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0093"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0093",
+          "Title": "S3 Access block should restrict public bucket to limit access",
+          "Description": "S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.\n",
+          "Message": "No public access block so not restricting public buckets",
+          "Namespace": "builtin.aws.s3.aws0093",
+          "Query": "data.builtin.aws.s3.aws0093.deny",
+          "Resolution": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0093",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0093"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0093",
+          "Title": "S3 Access block should restrict public bucket to limit access",
+          "Description": "S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.\n",
+          "Message": "No public access block so not restricting public buckets",
+          "Namespace": "builtin.aws.s3.aws0093",
+          "Query": "data.builtin.aws.s3.aws0093.deny",
+          "Resolution": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0093",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0093"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.logs",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 113,
+            "EndLine": 141,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 113,
+                  "Content": "resource \"aws_s3_bucket\" \"logs\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"logs\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 114,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-logs\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-logs\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 115,
+                  "Content": "  acl    = \"log-delivery-write\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"log-delivery-write\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 116,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 117,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 118,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 119,
+                  "Content": "  server_side_encryption_configuration {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  server_side_encryption_configuration {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 120,
+                  "Content": "    rule {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    rule {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 121,
+                  "Content": "      apply_server_side_encryption_by_default {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      apply_server_side_encryption_by_default {",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 122,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0093",
+          "Title": "S3 Access block should restrict public bucket to limit access",
+          "Description": "S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.\n",
+          "Message": "No public access block so not restricting public buckets",
+          "Namespace": "builtin.aws.s3.aws0093",
+          "Query": "data.builtin.aws.s3.aws0093.deny",
+          "Resolution": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0093",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0093"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0094",
+          "Title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+          "Description": "The \"block public access\" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.\n",
+          "Message": "Bucket does not have a corresponding public access block.",
+          "Namespace": "builtin.aws.s3.aws0094",
+          "Query": "data.builtin.aws.s3.aws0094.deny",
+          "Resolution": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0094",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0094"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0094",
+          "Title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+          "Description": "The \"block public access\" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.\n",
+          "Message": "Bucket does not have a corresponding public access block.",
+          "Namespace": "builtin.aws.s3.aws0094",
+          "Query": "data.builtin.aws.s3.aws0094.deny",
+          "Resolution": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0094",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0094"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0094",
+          "Title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+          "Description": "The \"block public access\" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.\n",
+          "Message": "Bucket does not have a corresponding public access block.",
+          "Namespace": "builtin.aws.s3.aws0094",
+          "Query": "data.builtin.aws.s3.aws0094.deny",
+          "Resolution": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0094",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0094"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0094",
+          "Title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+          "Description": "The \"block public access\" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.\n",
+          "Message": "Bucket does not have a corresponding public access block.",
+          "Namespace": "builtin.aws.s3.aws0094",
+          "Query": "data.builtin.aws.s3.aws0094.deny",
+          "Resolution": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0094",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0094"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.logs",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 113,
+            "EndLine": 141,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 113,
+                  "Content": "resource \"aws_s3_bucket\" \"logs\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"logs\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 114,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-logs\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-logs\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 115,
+                  "Content": "  acl    = \"log-delivery-write\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"log-delivery-write\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 116,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 117,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 118,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 119,
+                  "Content": "  server_side_encryption_configuration {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  server_side_encryption_configuration {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 120,
+                  "Content": "    rule {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    rule {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 121,
+                  "Content": "      apply_server_side_encryption_by_default {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      apply_server_side_encryption_by_default {",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 122,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0094",
+          "Title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+          "Description": "The \"block public access\" settings in S3 override individual policies that apply to a given bucket, meaning that all public access can be controlled in one central types for that bucket. It is therefore good practice to define these settings for each bucket in order to clearly define the public access that can be allowed for it.\n",
+          "Message": "Bucket does not have a corresponding public access block.",
+          "Namespace": "builtin.aws.s3.aws0094",
+          "Query": "data.builtin.aws.s3.aws0094.deny",
+          "Resolution": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0094",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+            "https://avd.aquasec.com/misconfig/aws-0094"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.\nNote that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.\n",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Namespace": "builtin.aws.s3.aws0132",
+          "Query": "data.builtin.aws.s3.aws0132.deny",
+          "Resolution": "Use SSE-KMS with a customer managed key (CMK)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/aws-0132"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 1,
+            "EndLine": 21,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 1,
+                  "Content": "resource \"aws_s3_bucket\" \"data\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 2,
+                  "Content": "  # bucket is public",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is public",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 3,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 4,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 5,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 6,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 7,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 8,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 9,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-data\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 10,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.\nNote that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.\n",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Namespace": "builtin.aws.s3.aws0132",
+          "Query": "data.builtin.aws.s3.aws0132.deny",
+          "Resolution": "Use SSE-KMS with a customer managed key (CMK)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/aws-0132"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.data_science",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 89,
+            "EndLine": 111,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 89,
+                  "Content": "resource \"aws_s3_bucket\" \"data_science\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"data_science\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 90,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 91,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-data-science\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-data-science\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 92,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 93,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 94,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 95,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 96,
+                  "Content": "  logging {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  logging {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 97,
+                  "Content": "    target_bucket = \"${aws_s3_bucket.logs.id}\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mtarget_bucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0maws_s3_bucket.logs.id\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 98,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.\nNote that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.\n",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Namespace": "builtin.aws.s3.aws0132",
+          "Query": "data.builtin.aws.s3.aws0132.deny",
+          "Resolution": "Use SSE-KMS with a customer managed key (CMK)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/aws-0132"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.financials",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 42,
+            "EndLine": 63,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 42,
+                  "Content": "resource \"aws_s3_bucket\" \"financials\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"financials\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 43,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 44,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 45,
+                  "Content": "  # bucket does not have versioning",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have versioning",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 46,
+                  "Content": "  bucket        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 47,
+                  "Content": "  acl           = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m           = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 48,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 49,
+                  "Content": "  tags = merge({",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mtags\u001b[0m =\u001b[38;5;33m merge\u001b[0m({",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 50,
+                  "Content": "    Name        = \"${local.resource_prefix.value}-financials\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245mName\u001b[0m        = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-financials\"",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 51,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "Terraform Security Check",
+          "ID": "AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To gain greater control over encryption, such as key rotation, access policies, and auditability, use customer managed keys (CMKs) with SSE-KMS.\nNote that SSE-KMS is not supported for S3 server access logging destination buckets; in such cases, use SSE-S3 instead.\n",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Namespace": "builtin.aws.s3.aws0132",
+          "Query": "data.builtin.aws.s3.aws0132.deny",
+          "Resolution": "Use SSE-KMS with a customer managed key (CMK)",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/aws-0132"
+          ],
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "Resource": "aws_s3_bucket.operations",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 65,
+            "EndLine": 87,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 65,
+                  "Content": "resource \"aws_s3_bucket\" \"operations\" {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;33mresource\u001b[0m \u001b[38;5;37m\"aws_s3_bucket\"\u001b[0m \u001b[38;5;37m\"operations\"\u001b[0m {",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 66,
+                  "Content": "  # bucket is not encrypted",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[38;5;239m  # bucket is not encrypted",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 67,
+                  "Content": "  # bucket does not have access logs",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  # bucket does not have access logs",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 68,
+                  "Content": "  bucket = \"${local.resource_prefix.value}-operations\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245mbucket\u001b[0m = \u001b[38;5;37m\"\u001b[0m\u001b[38;5;37m${\u001b[0mlocal.resource_prefix.value\u001b[38;5;37m}\u001b[0m\u001b[38;5;37m-operations\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 69,
+                  "Content": "  acl    = \"private\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;245macl\u001b[0m    = \u001b[38;5;37m\"private\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 70,
+                  "Content": "  versioning {",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  versioning {",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 71,
+                  "Content": "    enabled = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;245menabled\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 72,
+                  "Content": "  }",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  }",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 73,
+                  "Content": "  force_destroy = true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;245mforce_destroy\u001b[0m = \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 74,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# Card 1
+
+- **Value claim:** The analyst sees which vendor statements relevant to this use tell them something, which ones any vendor would make, and which omissions deserve a follow-up.
+- **Decision changed:** A vendor with a polished page and a SOC 2 mention can move from approve to hold, with named requests. Omissions peers share become conditions, not holds.
+- **Trivial heuristic:** `grep -qiE 'SOC 2 Type (2|II)|ISO 27001' page.txt && echo APPROVE || echo HOLD`. A stronger rival is one prompt: "List what's missing for this use."
+- **Why it beats that:** Grep cannot see use or scope. The prompt lists gaps but cannot say which silence is unusual, because that needs measured peer behaviour. Discipline: signalling theory (Spence) and voluntary disclosure (Grossman-Milgrom). A claim every vendor makes pools and cannot separate them, and silence where peers speak carries information. Remove this and the n/N counts, ranking and hold line vanish, leaving a generic gap list.
+- **Ground truth:** Completed CAIQs in the CSA STAR Registry: run on the vendor's page, then check silent items against its answers. We have not checked the registry, so 20 minutes is unconfirmed. Answers are self-reported. No source of correct decisions exists; that needs a practitioner.
+- **Falsifier:** Above-median silent items are no likelier to be CAIQ "No" or "NA" than other silent items. Or disclosure rates are nearly flat, so ranking means nothing. Or a practitioner picks the same follow-ups with the counts hidden.
+- **Numbers:** Per item, n of N: corpus pages stating it, counted by the same extraction. N: pages we fetched. Hold line: median disclosure rate across items, computed from the corpus. Item pool: 106 active CSF 2.0 subcategories (OSCAL catalog). Audit periods: quoted from pasted text. No scores or probabilities.
+- **The first screen:** A verdict with ranked requests, each showing its evidence tier (attested excerpt, vendor claim, silent) and n of N peers.
+- **The live moment:** A judge pastes a real security page plus one line of use. Verdict and requests return from one Claude call, speed unmeasured. Changing the use, or deleting one sentence, changes the list.
+- **Build:** Real: paste flow, extraction, use-to-item selection, a corpus of fetched public pages, the verdict. Not real: same-category peers (the corpus is mixed and small, and we chose it), PDF ingestion, validated accuracy. Page fetching is untested; the corpus is the main risk.

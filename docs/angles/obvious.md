@@ -1,0 +1,3 @@
+- **Input:** Company security policies and cloud configuration or evidence documents, plus a chosen framework's control list (SOC 2, ISO 27001, NIST CSF).
+- **Core computation:** An LLM maps each policy or evidence item to framework controls and scores each control as met, partial or missing.
+- **Decision output:** A compliance gap report with a readiness score and a prioritised list of controls to fix before the audit.
