@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterCounts, filterFaults, lineDiff, verdictCopy } from './grid.js'
+import { emptyFilterMessage, filterCounts, filterFaults, lineDiff, verdictCopy } from './grid.js'
 
 const faults = [
   { id: 'all-caught', results: { a: 'DETECTED', b: 'DETECTED' } },
@@ -35,24 +35,82 @@ describe('filterCounts', () => {
   })
 })
 
+describe('emptyFilterMessage', () => {
+  it('says no scanner missed anything when nothing was missed', () => {
+    expect(emptyFilterMessage('missed-by-any', { 'missed-by-any': 0, 'detected-by-none': 0 })).toBe(
+      'No scanner missed any of these problems.',
+    )
+  })
+
+  it('says every miss was caught elsewhere when only the stricter filter is empty', () => {
+    expect(emptyFilterMessage('detected-by-none', { 'missed-by-any': 3, 'detected-by-none': 0 })).toBe(
+      'At least one scanner caught every problem that another scanner missed.',
+    )
+  })
+
+  it('refuses to explain away a filter that has results', () => {
+    expect(() => emptyFilterMessage('missed-by-any', { 'missed-by-any': 3, 'detected-by-none': 0 })).toThrow(
+      'missed-by-any',
+    )
+  })
+})
+
 describe('verdictCopy', () => {
-  const benchmark = (missed, caughtByAnotherTool) => ({
+  const benchmark = (missed, caughtByAnotherTool, { unfinished = 0, otherWarnings = 100 } = {}) => ({
     corpus: { faultCount: 24 },
-    heuristic: { missed, caughtByAnotherTool },
+    heuristic: { toolId: 'top', missed, caughtByAnotherTool },
+    tools: [
+      { id: 'top', terragoatFindings: 300, error: unfinished },
+      { id: 'other', terragoatFindings: otherWarnings, error: 0 },
+    ],
   })
 
-  it('states the count of silent faults and of faults another tool caught', () => {
-    const copy = verdictCopy(benchmark(9, 4))
-    expect(copy.headline).toBe('The tool with the most findings stayed silent on 9 of 24 planted faults.')
-    expect(copy.reason).toContain('Another tool caught 4 of those')
+  it('states how many hidden problems the scanner with the most warnings missed', () => {
+    expect(verdictCopy(benchmark(9, 4)).headline).toBe(
+      'The scanner that reported the most warnings on a standard test project still missed 9 of the 24 problems we hid.',
+    )
   })
 
-  it('does not invent a gap when no other tool caught the missed faults', () => {
-    expect(verdictCopy(benchmark(9, 0)).reason).toBe('No other tool caught those either, so a second scanner would not close this gap.')
+  it('says how many of the misses another scanner caught', () => {
+    expect(verdictCopy(benchmark(9, 4)).reason).toContain('At least one other scanner caught 4 of those 9.')
   })
 
-  it('says plainly when the benchmark found no blind spot', () => {
-    expect(verdictCopy(benchmark(0, 0)).headline).toBe('The tool with the most findings caught all 24 planted faults.')
+  it('says when another scanner caught every miss', () => {
+    expect(verdictCopy(benchmark(9, 9)).reason).toContain('Every one of those 9 was caught by at least one other scanner.')
+  })
+
+  it('reads naturally when the only miss was caught by another scanner', () => {
+    expect(verdictCopy(benchmark(1, 1)).reason).toContain('Another scanner caught that one.')
+  })
+
+  it('does not promise a second scanner helps when none caught the misses', () => {
+    expect(verdictCopy(benchmark(9, 0)).reason).toContain(
+      "No other scanner we ran caught those either, so in this test a second opinion wouldn't have helped.",
+    )
+  })
+
+  it('says why a miss matters to someone reading a clean scan', () => {
+    expect(verdictCopy(benchmark(9, 4)).reason).toContain(
+      'A clean scan only tells you something if you know what the scanner would have missed.',
+    )
+  })
+
+  it('says plainly when the test found no misses', () => {
+    expect(verdictCopy(benchmark(0, 0)).headline).toBe(
+      'The scanner that reported the most warnings on a standard test project missed none of the 24 problems we hid.',
+    )
+  })
+
+  it('does not call a scanner free of blind spots when it could not finish', () => {
+    expect(verdictCopy(benchmark(0, 0, { unfinished: 2 })).reason).toBe(
+      "It couldn't finish on 2 of them, so this test can't say how it does on those.",
+    )
+  })
+
+  it('does not claim a single top scanner when two share the most warnings', () => {
+    expect(verdictCopy(benchmark(9, 4, { otherWarnings: 300 })).headline).toContain(
+      'A scanner tied for the most warnings on a standard test project',
+    )
   })
 })
 

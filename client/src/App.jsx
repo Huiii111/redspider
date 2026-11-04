@@ -32,20 +32,23 @@ export default function App() {
     <>
       {import.meta.env.MODE === 'sample' && (
         <div className="sample-banner" role="alert">
-          Sample data for layout work. These tools are fictional and these aren't benchmark results.
+          Sample data: these scanners are made up and these aren't real test results.
         </div>
       )}
       <header className="topbar">
         <a className="wordmark" href="#/">
           Blind<span>Spots</span>
         </a>
-        <span className="topbar-tagline">What open-source audit tools miss in Terraform</span>
+        <p className="product-line">
+          We hide known security problems in cloud setup code, then run security scanners on it to see which problems
+          each one misses.
+        </p>
         <nav aria-label="Main">
           <a href="#/" aria-current={onTry ? undefined : 'page'}>
-            Results
+            Scanner results
           </a>
           <a href="#/try" aria-current={onTry ? 'page' : undefined}>
-            Try it
+            Try the scanners yourself
           </a>
         </nav>
       </header>

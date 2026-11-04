@@ -2,49 +2,116 @@ import { useMemo, useState } from 'react'
 import { getBenchmark, NO_RUN } from '../api.js'
 import { FailedNotice, Notice } from '../components/Notice.jsx'
 import { Status } from '../components/Status.jsx'
-import { FILTERS, filterCounts, filterFaults, verdictCopy } from '../lib/grid.js'
+import { StatusKey } from '../components/StatusKey.jsx'
+import {
+  BENCHMARK_RESULT_WORDS,
+  emptyFilterMessage,
+  FILTERS,
+  filterCounts,
+  filterFaults,
+  mostWarningsScanner,
+  verdictCopy,
+} from '../lib/grid.js'
 import { useRequest } from '../lib/useRequest.js'
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 
-function Provenance({ benchmark }) {
-  const { ranAt, corpus, tools } = benchmark
+function TryYourOwn() {
   return (
-    <dl className="provenance">
-      <div>
-        <dt>Run</dt>
-        <dd>{formatDate(ranAt)}</dd>
-      </div>
-      <div>
-        <dt>Faults from</dt>
-        <dd>{corpus.source}</dd>
-      </div>
-      <div>
-        <dt>Tools</dt>
-        <dd className="mono">{tools.map((tool) => `${tool.name} ${tool.version}`).join(' · ')}</dd>
-      </div>
-    </dl>
+    <a className="button" href="#/try">
+      Try it on your own code
+    </a>
   )
 }
 
-function Grid({ tools, faults, faultCount }) {
+function HowTheTestWorks({ faultCount, scannerCount }) {
   return (
-    <div className="grid-scroll" tabIndex={0} role="region" aria-label="Planted faults by tool">
+    <section className="test-steps" aria-labelledby="test-steps-title">
+      <h2 id="test-steps-title">How the test works</h2>
+      <ol>
+        <li>
+          <strong>Hide a problem</strong>
+          <span>We hid {faultCount} known security problems in cloud setup code (Terraform), one at a time.</span>
+        </li>
+        <li>
+          <strong>Run every scanner</strong>
+          <span>{scannerCount} security scanners checked the code with each problem and without it.</span>
+        </li>
+        <li>
+          <strong>See who caught it</strong>
+          <span>A scanner caught a problem only if it gave a new warning once the problem was there.</span>
+        </li>
+      </ol>
+    </section>
+  )
+}
+
+function RunDetails({ benchmark }) {
+  const { ranAt, corpus, tools, heuristic } = benchmark
+  return (
+    <section className="run-details" aria-labelledby="run-details-title">
+      <h2 id="run-details-title">Run details</h2>
+      <dl>
+        <div>
+          <dt>Run on</dt>
+          <dd>{formatDate(ranAt)}</dd>
+        </div>
+        <div>
+          <dt>Hidden problems from</dt>
+          <dd>{corpus.source}</dd>
+        </div>
+        <div>
+          <dt>Scanner versions</dt>
+          <dd className="mono">{tools.map((tool) => `${tool.name} ${tool.version}`).join(' · ')}</dd>
+        </div>
+        <div>
+          <dt>Warnings on the test project</dt>
+          <dd className="mono">{tools.map((tool) => `${tool.name} ${tool.terragoatFindings}`).join(' · ')}</dd>
+        </div>
+        <div>
+          <dt>Rule for the scanner in the headline</dt>
+          <dd className="mono">{heuristic.rule}</dd>
+        </div>
+      </dl>
+    </section>
+  )
+}
+
+function ScannerHeading({ tool, faultCount, mostWarnings }) {
+  return (
+    <th scope="col">
+      <span className="tool-name">{tool.name}</span>
+      {mostWarnings && (
+        <span className="most-warnings">{mostWarnings.sharedTop ? 'Tied for most warnings' : 'Most warnings'}</span>
+      )}
+      <span className="tool-meta">
+        Missed <strong>{tool.silent}</strong> of {faultCount}
+      </span>
+      {tool.error > 0 && <span className="tool-meta">Couldn't finish {tool.error}</span>}
+    </th>
+  )
+}
+
+function Grid({ benchmark, faults }) {
+  const { tools, corpus } = benchmark
+  const mostWarnings = mostWarningsScanner(benchmark)
+  return (
+    <div className="grid-scroll" tabIndex={0} role="region" aria-label="Hidden problems and what each scanner did">
       <table className="grid">
         <thead>
           <tr>
             <th scope="col" className="grid-corner">
-              Planted fault
+              <span className="grid-corner-title">Hidden problem</span>
+              <span className="tool-meta">Open any row to see the code</span>
             </th>
             {tools.map((tool) => (
-              <th scope="col" key={tool.id}>
-                <span className="tool-name">{tool.name}</span>
-                <span className="tool-meta mono">{tool.version}</span>
-                <span className="tool-meta">
-                  silent on <strong>{tool.silent}</strong> of {faultCount}
-                </span>
-              </th>
+              <ScannerHeading
+                key={tool.id}
+                tool={tool}
+                faultCount={corpus.faultCount}
+                mostWarnings={tool.id === mostWarnings.scanner.id ? mostWarnings : null}
+              />
             ))}
           </tr>
         </thead>
@@ -52,9 +119,14 @@ function Grid({ tools, faults, faultCount }) {
           {faults.map((fault) => (
             <tr key={fault.id}>
               <th scope="row">
-                <a href={`#/fault/${fault.id}`}>{fault.title}</a>
+                <a className="row-link" href={`#/fault/${fault.id}`}>
+                  <span className="row-link-title">{fault.title}</span>
+                  <span className="row-link-arrow" aria-hidden="true">
+                    ›
+                  </span>
+                </a>
                 <span className="fault-ref mono">
-                  {fault.requirement.source} {fault.requirement.ref}
+                  Breaks {fault.requirement.source} {fault.requirement.ref}
                 </span>
               </th>
               {tools.map((tool) => (
@@ -62,7 +134,7 @@ function Grid({ tools, faults, faultCount }) {
                   <a
                     className="cell-link"
                     href={`#/fault/${fault.id}`}
-                    aria-label={`${tool.name}, ${fault.title}: ${fault.results[tool.id]}`}
+                    aria-label={`${tool.name}, ${fault.title}: ${BENCHMARK_RESULT_WORDS[fault.results[tool.id]]}`}
                   >
                     <Status value={fault.results[tool.id]} />
                   </a>
@@ -85,42 +157,62 @@ function Benchmark({ benchmark }) {
 
   return (
     <>
-      <section className="verdict">
-        <h1>{headline}</h1>
-        <p className="reason">{reason}</p>
-        <a className="button" href="#/try">
-          Try it on your own Terraform
-        </a>
-      </section>
+      <div className="results-intro">
+        <section className="verdict">
+          <h1>{headline}</h1>
+          <p className="reason">{reason}</p>
+          <div className="next-step">
+            <TryYourOwn />
+            <span>Change some code and see which scanners notice.</span>
+          </div>
+        </section>
+        <HowTheTestWorks faultCount={corpus.faultCount} scannerCount={tools.length} />
+      </div>
 
-      <Provenance benchmark={benchmark} />
+      <p className="scope">
+        We hid these {corpus.faultCount} problems ourselves, so these results don't predict how often a scanner catches
+        problems in real projects. These are code scanners, not complete compliance products.
+      </p>
 
-      <div className="filters" role="group" aria-label="Filter faults">
-        {FILTERS.map(({ id, label }) => (
-          <button
-            type="button"
-            key={id}
-            className="filter"
-            aria-pressed={filter === id}
-            onClick={() => setFilter(id)}
-          >
-            {label} <span className="mono">{counts[id]}</span>
-          </button>
-        ))}
+      <div className="grid-guide">
+        <div className="filters" role="group" aria-label="Show hidden problems">
+          {FILTERS.map(({ id, label }) => (
+            <button
+              type="button"
+              key={id}
+              className="filter"
+              aria-pressed={filter === id}
+              onClick={() => setFilter(id)}
+            >
+              {label} <span className="filter-count mono">{counts[id]}</span>
+            </button>
+          ))}
+        </div>
+        <StatusKey />
       </div>
 
       {visible.length === 0 ? (
-        <p className="empty">No faults match this filter.</p>
+        <div className="filter-empty">
+          <p>{emptyFilterMessage(filter, counts)}</p>
+          <button type="button" className="filter" onClick={() => setFilter('all')}>
+            Show all hidden problems
+          </button>
+        </div>
       ) : (
-        <Grid tools={tools} faults={visible} faultCount={corpus.faultCount} />
+        <Grid benchmark={benchmark} faults={visible} />
       )}
 
-      <p className="scope">
-        Covers {corpus.faultCount} faults we planted in AWS Terraform, so it says nothing about how often these
-        tools catch faults in real code. These are open-source code scanners, not complete GRC platforms. A
-        silent result means the tool ran and reported nothing new on this fault.
-      </p>
+      <RunDetails benchmark={benchmark} />
     </>
+  )
+}
+
+function NoResultsYet() {
+  return (
+    <Notice title="No test results yet" action={<TryYourOwn />}>
+      Results appear here once every scanner has been run against the hidden problems. You can already try the scanners
+      on your own cloud setup code (Terraform).
+    </Notice>
   )
 }
 
@@ -128,20 +220,10 @@ export function Results() {
   const result = useRequest(getBenchmark)
 
   if (result.status === 'loading') return <p className="empty">Loading results…</p>
-  if (result.status === 'ready') return <Benchmark benchmark={result.data} />
-  if (result.error.code === NO_RUN) {
-    return (
-      <Notice
-        title="No benchmark results yet"
-        action={
-          <a className="button" href="#/try">
-            Try it on your own Terraform
-          </a>
-        }
-      >
-        Results appear here after the first full run. You can still compare the tools on your own Terraform.
-      </Notice>
-    )
+  if (result.status === 'ready') {
+    if (result.data.faults.length === 0) return <NoResultsYet />
+    return <Benchmark benchmark={result.data} />
   }
+  if (result.error.code === NO_RUN) return <NoResultsYet />
   return <FailedNotice error={result.error} retry={result.retry} />
 }

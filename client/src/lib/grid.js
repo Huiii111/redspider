@@ -11,10 +11,16 @@ const FILTER_RULES = {
 }
 
 export const FILTERS = [
-  { id: 'all', label: 'All faults' },
-  { id: 'missed-by-any', label: 'Missed by at least one tool' },
-  { id: 'detected-by-none', label: 'Detected by no tool' },
+  { id: 'all', label: 'All hidden problems' },
+  { id: 'missed-by-any', label: 'Missed by at least one scanner' },
+  { id: 'detected-by-none', label: 'Missed, and no scanner caught it' },
 ]
+
+export const BENCHMARK_RESULT_WORDS = {
+  [STATUS.DETECTED]: 'Caught',
+  [STATUS.SILENT]: 'Missed',
+  [STATUS.ERROR]: "Couldn't finish",
+}
 
 export function filterFaults(faults, filterId) {
   const rule = FILTER_RULES[filterId]
@@ -26,23 +32,54 @@ export function filterCounts(faults) {
   return Object.fromEntries(FILTERS.map(({ id }) => [id, filterFaults(faults, id).length]))
 }
 
-export function verdictCopy({ corpus, heuristic }) {
-  const { faultCount } = corpus
-  const { missed, caughtByAnotherTool } = heuristic
+export function emptyFilterMessage(filterId, counts) {
+  if (counts['missed-by-any'] === 0) return 'No scanner missed any of these problems.'
+  if (filterId === 'detected-by-none') return 'At least one scanner caught every problem that another scanner missed.'
+  throw new Error(`Filter has results, so it has no empty message: ${filterId}`)
+}
+
+export function mostWarningsScanner({ tools, heuristic }) {
+  const scanner = tools.find((tool) => tool.id === heuristic.toolId)
+  const sharedTop = tools.filter((tool) => tool.terragoatFindings === scanner.terragoatFindings).length > 1
+  return { scanner, sharedTop }
+}
+
+const WHY_IT_MATTERS = 'A clean scan only tells you something if you know what the scanner would have missed.'
+
+function caughtElsewhereSentence(missed, caughtElsewhere) {
+  const those = missed === 1 ? 'that one' : 'those'
+  if (caughtElsewhere === 0) {
+    return `No other scanner we ran caught ${those} either, so in this test a second opinion wouldn't have helped.`
+  }
+  if (caughtElsewhere < missed) return `At least one other scanner caught ${caughtElsewhere} of those ${missed}.`
+  if (missed === 1) return 'Another scanner caught that one.'
+  return `Every one of those ${missed} was caught by at least one other scanner.`
+}
+
+function noMissesReason(unfinished) {
+  if (unfinished === 0) return 'This test found no blind spot in that scanner on these problems.'
+  const those = unfinished === 1 ? 'that one' : 'those'
+  return `It couldn't finish on ${unfinished} of them, so this test can't say how it does on ${those}.`
+}
+
+export function verdictCopy(benchmark) {
+  const { faultCount } = benchmark.corpus
+  const { missed, caughtByAnotherTool } = benchmark.heuristic
+  const { scanner, sharedTop } = mostWarningsScanner(benchmark)
+  const subject = sharedTop
+    ? 'A scanner tied for the most warnings on a standard test project'
+    : 'The scanner that reported the most warnings on a standard test project'
 
   if (missed === 0) {
     return {
-      headline: `The tool with the most findings caught all ${faultCount} planted faults.`,
-      reason: 'This benchmark found no blind spot in that tool on these faults.',
+      headline: `${subject} missed none of the ${faultCount} problems we hid.`,
+      reason: noMissesReason(scanner.error),
     }
   }
 
   return {
-    headline: `The tool with the most findings stayed silent on ${missed} of ${faultCount} planted faults.`,
-    reason:
-      caughtByAnotherTool === 0
-        ? 'No other tool caught those either, so a second scanner would not close this gap.'
-        : `Another tool caught ${caughtByAnotherTool} of those, so relying on one scanner leaves a gap you can't see in its report.`,
+    headline: `${subject} still missed ${missed} of the ${faultCount} problems we hid.`,
+    reason: `${caughtElsewhereSentence(missed, caughtByAnotherTool)} ${WHY_IT_MATTERS}`,
   }
 }
 
