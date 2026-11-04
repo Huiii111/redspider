@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { FaultDetail } from './screens/FaultDetail.jsx'
+import { Home } from './screens/Home.jsx'
 import { Results } from './screens/Results.jsx'
 import { TryIt } from './screens/TryIt.jsx'
 
 const FAULT_ROUTE = /^#\/fault\/(.+)$/
+const HOME_ROUTE = '#/home'
 
 function useHash() {
   const [hash, setHash] = useState(window.location.hash)
@@ -28,10 +30,11 @@ function Screen({ hash }) {
 export default function App() {
   const hash = useHash()
   const onTry = hash === '#/try'
+  const onHome = hash === HOME_ROUTE
   return (
     <>
-      <header className="topbar">
-        <a className="wordmark" href="#/">
+      <header className={onHome ? 'topbar topbar-home' : 'topbar'}>
+        <a className="wordmark" href={HOME_ROUTE}>
           Project <span>Red Spider</span>
         </a>
         <p className="product-line">
@@ -39,7 +42,7 @@ export default function App() {
           each one misses.
         </p>
         <nav aria-label="Main">
-          <a href="#/" aria-current={onTry ? undefined : 'page'}>
+          <a href="#/" aria-current={onTry || onHome ? undefined : 'page'}>
             Scanner results
           </a>
           <a href="#/try" aria-current={onTry ? 'page' : undefined}>
@@ -47,9 +50,15 @@ export default function App() {
           </a>
         </nav>
       </header>
-      <main className="page">
-        <Screen hash={hash} />
-      </main>
+      {onHome ? (
+        <main>
+          <Home />
+        </main>
+      ) : (
+        <main className="page">
+          <Screen hash={hash} />
+        </main>
+      )}
     </>
   )
 }
