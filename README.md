@@ -1,10 +1,10 @@
-# Scanner Blind Spots: scanner adapters (`bad-terraform-code` branch)
+# Scanner Blind Spots
 
-A benchmark that plants known faults in Terraform and shows which open-source audit tools stay silent on each one. The full design is in [docs/architecture.md](docs/architecture.md).
+A benchmark that plants known faults in Terraform and shows which open-source audit tools (Trivy, Checkov, KICS and Terrascan) stay silent on each one. A clean scan only means something if you know what the tool would have missed.
 
-This branch covers the adapter and sandbox part of that design: running Trivy, Checkov, KICS and Terrascan safely and turning their output into one common `Finding` shape. It also holds the repo scaffold. The grader, routes and benchmark script are not built here.
+The design, API contract and team split are in [docs/architecture.md](docs/architecture.md). The product name is a working title, and nothing has been measured yet.
 
-## What's on this branch
+## Status
 
 | Area | State |
 |---|---|
@@ -107,8 +107,8 @@ tests/
 docs/architecture.md     Design and team split
 ```
 
-## Relationship to other branches
+## Other branches
 
-This branch started from an empty repository and shares no history with `huiru/backend` or `anton/current-version`. Those branches have their own grader, API and adapters, and merging is a team decision.
+The adapters and sandbox live on `bad-terraform-code`. That branch started from an empty repository and shares no history with `huiru/backend` or `anton/current-version`. Those branches have their own grader, API and adapters, and merging is a team decision.
 
 The adapter contract matches the one `huiru/backend` expects. One thing would need changing to run these adapters there: they import named settings from `server/config.js`, while that branch's config exports a single `config` object.
