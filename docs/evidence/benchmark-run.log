@@ -1,0 +1,42 @@
+Tools: checkov 3.4.3, kics 2.2.0, trivy 0.76.1
+Corpus: 30 planted pairs from ../claude_commmunity_hacakthon/tests/heldout
+TerraGoat: scanning /private/tmp/blindspots-terragoat
+  [ 1/30] case-01: checkov=DETECTED kics=DETECTED trivy=SILENT
+  [ 2/30] case-02: checkov=SILENT kics=DETECTED trivy=SILENT
+  [ 3/30] case-03: checkov=SILENT kics=SILENT trivy=SILENT
+  [ 4/30] case-04: checkov=DETECTED kics=SILENT trivy=SILENT
+  [ 5/30] case-05: checkov=DETECTED kics=SILENT trivy=DETECTED
+  [ 6/30] case-06: checkov=SILENT kics=SILENT trivy=SILENT
+  [ 7/30] case-07: checkov=SILENT kics=SILENT trivy=SILENT
+  [ 8/30] case-08: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [ 9/30] case-09: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [10/30] case-10: checkov=DETECTED kics=DETECTED trivy=SILENT
+  [11/30] case-11: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [12/30] case-12: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [13/30] case-13: checkov=SILENT kics=DETECTED trivy=SILENT
+  [14/30] case-14: checkov=DETECTED kics=SILENT trivy=SILENT
+  [15/30] case-15: checkov=DETECTED kics=SILENT trivy=SILENT
+  [16/30] case-16: checkov=DETECTED kics=SILENT trivy=SILENT
+  [17/30] case-17: checkov=SILENT kics=SILENT trivy=SILENT
+  [18/30] case-18: checkov=DETECTED kics=SILENT trivy=SILENT
+  [19/30] case-19: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [20/30] case-20: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [21/30] case-21: checkov=SILENT kics=SILENT trivy=SILENT
+  [22/30] case-22: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [23/30] case-23: checkov=SILENT kics=DETECTED trivy=DETECTED
+  [24/30] case-24: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [25/30] case-25: checkov=SILENT kics=SILENT trivy=SILENT
+  [26/30] case-26: checkov=DETECTED kics=DETECTED trivy=SILENT
+  [27/30] case-27: checkov=DETECTED kics=SILENT trivy=SILENT
+  [28/30] case-28: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [29/30] case-29: checkov=DETECTED kics=DETECTED trivy=DETECTED
+  [30/30] case-30: checkov=DETECTED kics=DETECTED trivy=SILENT
+
+ tool         TerraGoat  detected  silent  error
+ checkov            215        21       9      0
+ kics               153        17      13      0
+ trivy              113        12      18      0
+
+Heuristic pick: checkov. It missed 9 of 30 faults; another tool caught 3 of those.
+Wrote results/benchmark.json (run 20261104201513-63597478)
+exit 0
