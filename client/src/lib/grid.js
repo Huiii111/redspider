@@ -44,53 +44,24 @@ export function mostWarningsScanner({ tools, heuristic }) {
   return { scanner, sharedTop }
 }
 
-const WHY_IT_MATTERS = 'A clean scan only tells you something if you know what the scanner would have missed.'
-const SCANNERS_DIFFER = 'Scanners miss different things, so a clean scan only tells you something if you know what it would have missed.'
-
 export function missedLine(tool, faultCount) {
   if (tool.error === 0) return { missed: tool.silent, total: `of ${faultCount}` }
   return { missed: tool.silent, total: `of ${faultCount - tool.error} it finished` }
 }
 
-function caughtElsewhereSentence(missed, caughtElsewhere) {
-  const those = missed === 1 ? 'that one' : 'those'
-  if (caughtElsewhere === 0) {
-    return `No other scanner we ran caught ${those} either, so in this test a second opinion wouldn't have helped.`
-  }
-  if (caughtElsewhere < missed) return `At least one other scanner caught ${caughtElsewhere} of those ${missed}.`
-  if (missed === 1) return 'Another scanner caught that one.'
-  return `Every one of those ${missed} was caught by at least one other scanner.`
-}
-
-function noMissesReason(unfinished) {
-  if (unfinished === 0) return 'This test found no blind spot in that scanner on these problems.'
-  const those = unfinished === 1 ? 'that one' : 'those'
-  return `It couldn't finish on ${unfinished} of them, so this test can't say how it does on ${those}.`
-}
-
-export function verdictCopy(benchmark) {
+export function verdictHeadline(benchmark) {
   const { faultCount } = benchmark.corpus
-  const { missed, caughtByAnotherTool } = benchmark.heuristic
+  const { missed } = benchmark.heuristic
   const { scanner, sharedTop } = mostWarningsScanner(benchmark)
-  const warnings = scanner.terragoatFindings
-  const subject = sharedTop
-    ? `A scanner tied for the most warnings on a standard test project (${warnings})`
-    : `The scanner with the most warnings on a standard test project (${warnings})`
-  const outOf = scanner.error === 0
-    ? `${faultCount} problems we hid`
-    : `${faultCount - scanner.error} problems it finished`
+  const subject = sharedTop ? 'A scanner tied for the most warnings' : 'The scanner with the most warnings'
 
-  if (missed === 0) {
-    return {
-      headline: `${subject} missed none of the ${outOf}.`,
-      reason: noMissesReason(scanner.error),
-    }
+  if (missed === 0 && scanner.error === 0) return `${subject} missed none of the ${faultCount} hidden problems.`
+  if (scanner.error > 0) {
+    const finished = faultCount - scanner.error
+    const verb = missed === 0 ? 'missed none' : `still missed ${missed}`
+    return `${subject} ${verb} of the ${finished} hidden problems it finished.`
   }
-
-  return {
-    headline: `${subject} still missed ${missed} of the ${outOf}.`,
-    reason: `${caughtElsewhereSentence(missed, caughtByAnotherTool)} ${caughtByAnotherTool > 0 ? SCANNERS_DIFFER : WHY_IT_MATTERS}`,
-  }
+  return `${subject} still missed ${missed} of ${faultCount} hidden problems.`
 }
 
 export function lineDiff(before, after) {

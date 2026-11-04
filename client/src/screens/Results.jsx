@@ -11,7 +11,7 @@ import {
   filterFaults,
   missedLine,
   mostWarningsScanner,
-  verdictCopy,
+  verdictHeadline,
 } from '../lib/grid.js'
 import { useRequest } from '../lib/useRequest.js'
 
@@ -165,18 +165,13 @@ function Benchmark({ benchmark }) {
   const { corpus, faults, tools } = benchmark
   const counts = useMemo(() => filterCounts(faults), [faults])
   const visible = useMemo(() => filterFaults(faults, filter), [faults, filter])
-  const { headline, reason } = verdictCopy(benchmark)
 
   return (
     <>
       <div className="results-intro">
         <section className="verdict">
-          <h1>{headline}</h1>
-          <p className="reason">{reason}</p>
-          <div className="next-step">
-            <TryYourOwn />
-            <span>Pick a hidden problem, or bring your own code.</span>
-          </div>
+          <h1>{verdictHeadline(benchmark)}</h1>
+          <TryYourOwn />
         </section>
         <HowTheTestWorks faultCount={corpus.faultCount} scannerCount={tools.length} />
       </div>

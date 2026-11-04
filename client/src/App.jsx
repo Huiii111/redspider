@@ -32,7 +32,7 @@ export default function App() {
     <>
       <header className="topbar">
         <a className="wordmark" href="#/">
-          Blind<span>Spots</span>
+          Project <span>Red Spider</span>
         </a>
         <p className="product-line">
           We hide known security problems in cloud setup code, then run security scanners on it to see which problems
