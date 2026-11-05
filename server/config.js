@@ -19,6 +19,11 @@ function dir(name, fallback) {
 
 const isMac = process.platform === 'darwin';
 
+function command(prefix, fallback) {
+  const args = (process.env[`${prefix}_BIN_ARGS`] || '').split(' ').filter(Boolean);
+  return Object.freeze({ file: process.env[`${prefix}_BIN`] || fallback, args: Object.freeze(args) });
+}
+
 export const config = Object.freeze({
   root,
   host: process.env.HOST || '127.0.0.1', // Demo only: not hardened for the public internet.
@@ -31,15 +36,20 @@ export const config = Object.freeze({
   maxInputBytes: int('MAX_INPUT_BYTES', 100 * 1024),
   toolTimeoutSeconds: int('TOOL_TIMEOUT_SECONDS', 30), // John and Anton both chose 30s; prereg budgets the live scan under 15s.
 
-  // Scanner programs. A bare name is looked up on PATH.
+  // Scanner programs. A bare name is looked up on PATH. X_BIN_ARGS adds leading arguments, for
+  // tools that must be started through an interpreter, e.g. on Windows, where pip installs
+  // Checkov as a .cmd that can't run without a shell:
+  //   CHECKOV_BIN=.../python.exe  CHECKOV_BIN_ARGS="-m checkov.main"
   bins: Object.freeze({
-    trivy: process.env.TRIVY_BIN || 'trivy',
-    checkov: process.env.CHECKOV_BIN || 'checkov',
-    kics: process.env.KICS_BIN || 'kics',
+    trivy: command('TRIVY', 'trivy'),
+    checkov: command('CHECKOV', 'checkov'),
+    kics: command('KICS', 'kics'),
   }),
   // Prepended to PATH for scanner processes. Defaults to Homebrew on Apple silicon.
   extraPath: process.env.BREW_BIN ?? (isMac ? '/opt/homebrew/bin' : ''),
   kicsQueriesPath: process.env.KICS_QUERIES_PATH || (isMac ? '/opt/homebrew/opt/kics/share/kics/assets/queries' : ''),
   // The network sandbox only exists on macOS. Elsewhere scanners refuse to run unless this is set.
   allowUnsandboxed: process.env.ALLOW_UNSANDBOXED === '1',
+  // Run KICS in this Docker image (e.g. checkmarx/kics:v2.2.0) with no network, instead of a local binary.
+  kicsDockerImage: process.env.KICS_DOCKER_IMAGE || '',
 });

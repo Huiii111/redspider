@@ -1,4 +1,4 @@
-# Scanner Blind Spots
+# Red Spider
 
 A benchmark that plants known faults in Terraform and shows which open-source scanners (Checkov, Trivy, KICS, Terrascan) stay silent on each one. A clean scan only means something if you know what the tool would have missed.
 
@@ -284,6 +284,33 @@ This produces `results/benchmark.json`, the result shown on stage.
 
 If the summary reports any `ERROR` results, fix the adapter and run again before treating the result as evidence. Every file in the corpus must parse as Terraform, or the benchmark stops and names the file.
 
+### On Windows
+
+Tested on Windows 11 with Node 24, Python 3.10 and Docker Desktop. Install everything under `tools/`, which git ignores:
+
+| Tool | How |
+|---|---|
+| Trivy | Download `trivy_0.76.1_windows-64bit.zip` from the [release page](https://github.com/aquasecurity/trivy/releases/tag/v0.76.1), check it against `trivy_0.76.1_checksums.txt`, unzip to `tools/trivy/` |
+| Checkov | `python -m venv tools/checkov-venv`, then `tools/checkov-venv/Scripts/python -m pip install checkov==3.4.3` |
+| KICS | No Windows binary exists since v2. Start Docker Desktop and `docker pull checkmarx/kics:v2.2.0` |
+| TerraGoat | `git clone https://github.com/bridgecrewio/terragoat tools/terragoat` and record the commit |
+
+Then create `tools/demo.env` with absolute paths:
+
+```sh
+TRIVY_BIN=D:/path/to/repo/tools/trivy/trivy.exe
+CHECKOV_BIN=D:/path/to/repo/tools/checkov-venv/Scripts/python.exe
+CHECKOV_BIN_ARGS=-m checkov.main
+KICS_DOCKER_IMAGE=checkmarx/kics:v2.2.0
+ALLOW_UNSANDBOXED=1
+TERRAGOAT_DIR=tools/terragoat/terraform/aws
+```
+
+and run any script with it, e.g. `node --env-file=tools/demo.env server/scripts/benchmark.js`.
+
+- Checkov is started as `python -m checkov.main` because pip installs it as a `.cmd`, which Node can't run without a shell.
+- **Only KICS is isolated** on Windows: its container has no network and read-only input. Trivy and Checkov run unsandboxed, with network access and your user's file permissions. Keep the server on `127.0.0.1` and don't scan untrusted input. A Mac, or Docker for all three tools, is the safer setup for the event.
+
 ## Command reference
 
 | Command | What it does |
@@ -330,6 +357,8 @@ All settings are environment variables, read only in [server/config.js](server/c
 | `MAX_INPUT_BYTES` | `102400` | Size limit for each Terraform field in a live scan |
 | `TOOL_TIMEOUT_SECONDS` | `30` | Per-tool timeout for each scan. TerraGoat gets five times this |
 | `TRIVY_BIN`, `CHECKOV_BIN`, `KICS_BIN` | `trivy`, `checkov`, `kics` | Scanner programs. A bare name is looked up on `PATH` |
+| `TRIVY_BIN_ARGS`, `CHECKOV_BIN_ARGS`, `KICS_BIN_ARGS` | none | Leading arguments, space-separated. For tools started through an interpreter, such as `-m checkov.main` |
+| `KICS_DOCKER_IMAGE` | none | Run KICS in this image (e.g. `checkmarx/kics:v2.2.0`) with `--network none`, read-only input and root filesystem, instead of a local binary |
 | `BREW_BIN` | `/opt/homebrew/bin` on macOS | Added to `PATH` for scanner processes |
 | `KICS_QUERIES_PATH` | Homebrew's KICS queries on macOS | KICS query library |
 | `ALLOW_UNSANDBOXED` | unset | Set to `1` to run scanners off macOS, where there is no network sandbox |

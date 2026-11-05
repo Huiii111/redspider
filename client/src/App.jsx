@@ -37,7 +37,7 @@ export default function App() {
       )}
       <header className="topbar">
         <a className="wordmark" href="#/">
-          Blind<span>Spots</span>
+          Red<span>Spider</span>
         </a>
         <span className="topbar-tagline">What open-source audit tools miss in Terraform</span>
         <nav aria-label="Main">

@@ -3,3 +3,4 @@ node_modules/
 tests/generated/
 results/benchmark.fake.json
 branches/
+tools/

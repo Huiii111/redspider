@@ -1,5 +1,6 @@
 // KICS adapter. Resource address and parse checks from Anton; separate output dir from John.
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { config } from '../config.js';
@@ -32,24 +33,46 @@ export function parse(json) {
   );
 }
 
+// KICS ships no Windows or Linux binaries since v2, only a Docker image. With KICS_DOCKER_IMAGE
+// set, the scan runs in a container with no network, the input mounted read-only, and only the
+// output folder writable. That isolation works on every OS, unlike sandbox-exec.
+async function runInDocker(dir, out, flags, timeoutMs) {
+  const name = `sbs-kics-${randomUUID().slice(0, 8)}`;
+  try {
+    return await run('docker', [
+      'run', '--rm', '--name', name, '--network', 'none', '--read-only', '--tmpfs', '/tmp',
+      '-v', `${dir}:/scan:ro`, '-v', `${out}:/out`,
+      config.kicsDockerImage, 'scan', '-p', '/scan', '-o', '/out', ...flags,
+    ], { timeoutMs });
+  } catch (err) {
+    // Killing the docker CLI doesn't stop the container, so stop it by name.
+    await run('docker', ['rm', '-f', name], { timeoutMs: 15_000 }).catch(() => {});
+    throw err;
+  }
+}
+
 export default {
   id: ID,
   name: 'KICS',
   license: 'Apache-2.0',
   async version() {
-    const { stdout } = await run(config.bins.kics, ['version']);
+    const { stdout } = config.kicsDockerImage
+      ? await run('docker', ['run', '--rm', '--network', 'none', config.kicsDockerImage, 'version'], { timeoutMs: 60_000 })
+      : await run(config.bins.kics.file, [...config.bins.kics.args, 'version']);
     return versionFrom('KICS', stdout);
   },
   async scan(dir, { timeoutMs } = {}) {
     // Output goes outside the input dir, so the scanner never sees its own report.
     const out = await mkdtemp(path.join(os.tmpdir(), 'sbs-kics-out-'));
     try {
+      const flags = ['--output-name', REPORT_NAME, '--report-formats', 'json', '--no-progress', '--type', 'Terraform'];
       // KICS exits 20 to 60 when it finds something; only a missing report is a failure.
-      const { code } = await run(config.bins.kics, [
-        'scan', '-p', dir, '-o', out, '--output-name', REPORT_NAME, '--report-formats', 'json',
-        '--no-progress', '--type', 'Terraform',
-        ...(config.kicsQueriesPath ? ['-q', config.kicsQueriesPath] : []),
-      ], { sandbox: true, timeoutMs });
+      const { code } = config.kicsDockerImage
+        ? await runInDocker(dir, out, flags, timeoutMs)
+        : await run(config.bins.kics.file, [...config.bins.kics.args, 
+          'scan', '-p', dir, '-o', out, ...flags,
+          ...(config.kicsQueriesPath ? ['-q', config.kicsQueriesPath] : []),
+        ], { sandbox: true, timeoutMs });
       let text;
       try {
         text = await readFile(path.join(out, `${REPORT_NAME}.json`), 'utf8');

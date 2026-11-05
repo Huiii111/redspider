@@ -27,13 +27,13 @@ export default {
   name: 'Trivy',
   license: 'Apache-2.0',
   async version() {
-    const { stdout } = await run(config.bins.trivy, ['--version']);
+    const { stdout, stderr } = await run(config.bins.trivy.file, [...config.bins.trivy.args, '--version']);
     return versionFrom('Trivy', stdout);
   },
   async scan(dir, { timeoutMs } = {}) {
     // Trivy exits 0 on Terraform it can't parse and reports nothing, so input is
     // syntax-checked before any scan (server/core/terraform.js).
-    const { stdout } = await run(config.bins.trivy, ['config', '--format', 'json', '--skip-check-update', '--quiet', dir], { sandbox: true, timeoutMs });
-    return parse(parseToolJson('Trivy', stdout));
+    const { stdout, stderr } = await run(config.bins.trivy.file, [...config.bins.trivy.args, 'config', '--format', 'json', '--skip-check-update', '--quiet', dir], { sandbox: true, timeoutMs });
+    return parse(parseToolJson('Trivy', stdout, stderr));
   },
 };

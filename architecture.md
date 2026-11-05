@@ -1,8 +1,8 @@
-# Scanner Blind Spots: architecture
+# Red Spider: architecture
 
 A benchmark that plants known faults in Terraform and shows which open-source audit tools stay silent on each one. A clean scan only means something if you know what the tool would have missed.
 
-Team handoff. The product name is a working title. Nothing here has been built or measured yet, so every JSON value below shows shape only and is not a result.
+Team handoff. The product is called Red Spider. Nothing here has been built or measured yet, so every JSON value below shows shape only and is not a result.
 
 ## Stack
 

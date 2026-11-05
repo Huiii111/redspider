@@ -36,11 +36,11 @@ const MAX_OUTPUT_BYTES = 100 * 1024 * 1024;
 /**
  * @param bin   program name or path
  * @param args  argument array
- * @param opts  { sandbox: boolean, timeoutMs: number }
+ * @param opts  { sandbox: boolean, timeoutMs: number, cwd: string (default: the temp folder) }
  * @returns Promise<{ stdout, stderr, code }>
  * Rejects with ToolError if the program is missing, times out, can't start, or can't be sandboxed.
  */
-export function run(bin, args, { sandbox = false, timeoutMs = config.toolTimeoutSeconds * 1000 } = {}) {
+export function run(bin, args, { sandbox = false, timeoutMs = config.toolTimeoutSeconds * 1000, cwd = os.tmpdir() } = {}) {
   let file = bin;
   let fileArgs = args;
   if (sandbox) {
@@ -55,7 +55,7 @@ export function run(bin, args, { sandbox = false, timeoutMs = config.toolTimeout
     execFile(
       file,
       fileArgs,
-      { env, timeout: timeoutMs, killSignal: 'SIGKILL', maxBuffer: MAX_OUTPUT_BYTES, cwd: os.tmpdir(), windowsHide: true },
+      { env, timeout: timeoutMs, killSignal: 'SIGKILL', maxBuffer: MAX_OUTPUT_BYTES, cwd, windowsHide: true },
       (err, stdout, stderr) => {
         if (err?.killed) return reject(new ToolError(`${bin} timed out after ${Math.round(timeoutMs / 1000)}s and was stopped`));
         if (err?.code === 'ENOENT') return reject(new ToolError(`${file} is not installed or not on PATH`));
@@ -69,8 +69,11 @@ export function run(bin, args, { sandbox = false, timeoutMs = config.toolTimeout
 const EXCERPT = 200;
 
 // From Anton's parseJson.js: name the tool and show the start of what it printed.
-export function parseToolJson(tool, text) {
-  if (!text || !text.trim()) throw new ToolError(`${tool} produced no output`);
+export function parseToolJson(tool, text, stderr = '') {
+  if (!text || !text.trim()) {
+    const last = stderr.trim().split(/\r?\n/).filter(Boolean).pop();
+    throw new ToolError(`${tool} produced no output${last ? `: ${last.slice(0, EXCERPT)}` : ''}`);
+  }
   try {
     return JSON.parse(text);
   } catch {

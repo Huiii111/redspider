@@ -30,15 +30,18 @@ export default {
   name: 'Checkov',
   license: 'Apache-2.0',
   async version() {
-    const { stdout } = await run(config.bins.checkov, ['--version']);
+    const { stdout } = await run(config.bins.checkov.file, [...config.bins.checkov.args, '--version']);
     return versionFrom('Checkov', stdout);
   },
   async scan(dir, { timeoutMs } = {}) {
     // Checkov exits 1 when it finds something; the result is decided from the report.
-    const { stdout } = await run(config.bins.checkov, [
+    // cwd is the scanned folder: Checkov computes paths relative to cwd, which crashes on Windows
+    // when they're on different drives ("path is on mount 'D:', start on mount 'C:'").
+    const { stdout, stderr } = await run(config.bins.checkov.file, [
+      ...config.bins.checkov.args,
       '-d', dir, '-o', 'json', '--quiet', '--compact', '--framework', 'terraform',
       '--skip-download', '--download-external-modules', 'false',
-    ], { sandbox: true, timeoutMs });
-    return parse(parseToolJson('Checkov', stdout));
+    ], { sandbox: true, timeoutMs, cwd: dir });
+    return parse(parseToolJson('Checkov', stdout, stderr));
   },
 };
